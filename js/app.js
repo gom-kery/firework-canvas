@@ -10,6 +10,7 @@ window.fireworkState = {
   particleMode: "normal",
   duration: 5,
   ratio: "1:1",
+  framing: { shape: "rect", zoom: 1, offsetX: 0, offsetY: 0 },
   particleBuildMs: 0,
   formationProgress: 0,
   launchPointCount: 1,
@@ -31,7 +32,7 @@ window.drawCanvasBackground = function drawCanvasBackground() {
 };
 window.drawCanvasBackground();
 
-const CANVAS_PREVIEW_SIZES = { "1:1": { width: 720, height: 720 }, "9:16": { width: 720, height: 1280 } };
+const CANVAS_PREVIEW_SIZES = { "1:1": { width: 720, height: 720 }, "3:4": { width: 720, height: 960 }, "4:3": { width: 960, height: 720 } };
 
 function updateOptionSelection(selector, activeButton) {
   document.querySelectorAll(selector).forEach((button) => button.classList.toggle("is-selected", button === activeButton));
@@ -45,6 +46,7 @@ function rebuildParticlesForCanvas() {
   state.palette = [];
   state.particleBuildMs = performance.now() - startedAt;
   window.applyColorMode(state.colorMode);
+  if (window.renderImageFramingPreview) window.renderImageFramingPreview();
 }
 
 window.setCanvasRatio = function setCanvasRatio(ratio, button) {

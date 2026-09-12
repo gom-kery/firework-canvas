@@ -22,13 +22,24 @@
     return { width, height, x: Math.round((canvas.width - width) / 2), y: Math.round((canvas.height - height) / 2) };
   };
   const getSamplingStep = (width, height, limit) => Math.max(2, Math.round(Math.sqrt((width * height) / limit)));
+  window.getFramedSourceRect = function getFramedSourceRect(image, outputWidth, outputHeight) {
+    const frame = state.framing;
+    const baseScale = Math.max(outputWidth / image.naturalWidth, outputHeight / image.naturalHeight);
+    const scale = baseScale * frame.zoom;
+    const width = Math.min(image.naturalWidth, outputWidth / scale);
+    const height = Math.min(image.naturalHeight, outputHeight / scale);
+    const maxOffsetX = Math.max(0, (image.naturalWidth - width) / 2);
+    const maxOffsetY = Math.max(0, (image.naturalHeight - height) / 2);
+    return { x: maxOffsetX + frame.offsetX * maxOffsetX, y: maxOffsetY + frame.offsetY * maxOffsetY, width, height };
+  };
 
   window.createParticlesFromImage = function createParticlesFromImage(image, mode = state.particleMode) {
     const bounds = getFittedBounds(image, window.fireworkCanvas);
     const step = getSamplingStep(bounds.width, bounds.height, PARTICLE_PRESETS[mode]);
     samplingCanvas.width = bounds.width; samplingCanvas.height = bounds.height;
+    const source = window.getFramedSourceRect(image, bounds.width, bounds.height);
     samplingContext.clearRect(0, 0, bounds.width, bounds.height);
-    samplingContext.drawImage(image, 0, 0, bounds.width, bounds.height);
+    samplingContext.drawImage(image, source.x, source.y, source.width, source.height, 0, 0, bounds.width, bounds.height);
     const pixels = samplingContext.getImageData(0, 0, bounds.width, bounds.height).data;
     const particles = [];
     for (let y = 0; y < bounds.height; y += step) {
@@ -36,6 +47,12 @@
         const index = (y * bounds.width + x) * 4;
         const alpha = pixels[index + 3];
         if (alpha < ALPHA_THRESHOLD) continue;
+        if (state.framing.shape === "circle") {
+          const radius = Math.min(bounds.width, bounds.height) / 2;
+          const dx = x - bounds.width / 2;
+          const dy = y - bounds.height / 2;
+          if (dx * dx + dy * dy > radius * radius) continue;
+        }
         const color = { r: pixels[index], g: pixels[index + 1], b: pixels[index + 2] };
         const targetX = bounds.x + x; const targetY = bounds.y + y;
         particles.push({ x: targetX, y: targetY, targetX, targetY, color, paint: toCssColor(color), alpha: alpha / 255 });

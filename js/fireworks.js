@@ -1,5 +1,5 @@
 (function setupFireworkSequence() {
-  const TIMELINE = { launch: 780, rocketStagger: 55, burst: 260, formation: 1000, hold: 700, scatter: 850, fade: 700 };
+  const TIMELINE = { launch: 560, rocketStagger: 45, burst: 170, formation: 1100, hold: 1000, scatter: 720, fade: 550 };
   const SCATTER = { spread: 44, speed: 1.65, randomness: 0.7, gravity: 0.035, friction: 0.982 };
   const PHASE = { IDLE: "IDLE", LAUNCH: "LAUNCH", BURST: "BURST", FORMATION: "FORMATION", HOLD: "HOLD", SCATTER: "SCATTER", FADE: "FADE", COMPLETE: "COMPLETE" };
   let sequenceFrameId = null;

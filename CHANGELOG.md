@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Unit 4.1A — Image Framing & Pacing
+
+- 사각형과 원형 Crop, Preview 드래그 이동, 1~2.5배 확대를 추가했습니다.
+- Preview, Pixel Picker, Particle Sampling이 동일한 Framing source 영역을 사용합니다.
+- Ratio를 1:1 / 3:4 / 4:3으로 교체하고 9:16을 제거했습니다.
+- 3초 모드의 Formation·Hold 인식 시간을 늘리도록 Animation Timeline 비율을 조정했습니다.
+
 ### Unit 4.1 — Duration & Ratio
 
 - 3초와 5초 전체 Duration을 공통 Timeline 비율로 Scale합니다.
