@@ -12,6 +12,7 @@
   let stopTimer = null;
   let completionMessage = "";
   let finalized = false;
+  const downloadUrls = new Set();
 
   function setStatus(message) { if (window.setPreviewStatus) window.setPreviewStatus(message); }
   function getRecorderOptions() {
@@ -22,6 +23,23 @@
   function setSaveButtonState(recording) {
     saveButton.disabled = recording || !getRecorderOptions();
     saveButton.textContent = recording ? "● Recording..." : "↓ Save Video";
+  }
+  function createFileName() {
+    const now = new Date();
+    const pad = (value) => String(value).padStart(2, "0");
+    return `firework-canvas-${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}.webm`;
+  }
+  function downloadBlob(blob) {
+    const url = URL.createObjectURL(blob);
+    downloadUrls.add(url);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = createFileName();
+    link.style.display = "none";
+    document.body.append(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => { URL.revokeObjectURL(url); downloadUrls.delete(url); }, 1000);
   }
   function releaseRecordingResources() {
     if (stopTimer !== null) { clearTimeout(stopTimer); stopTimer = null; }
@@ -37,7 +55,11 @@
     const blob = chunks.length ? new Blob(chunks, { type: recorder?.mimeType || "video/webm" }) : null;
     if (blob && blob.size > 0) {
       state.recordedBlob = blob;
-      setStatus("WebM 영상이 준비되었습니다. 다운로드는 Unit 5.2에서 연결됩니다.");
+      saveButton.textContent = "↓ Downloading...";
+      try {
+        downloadBlob(blob);
+        setStatus("WebM 영상을 다운로드했습니다.");
+      } catch (error) { setStatus("WebM 영상은 생성되었지만 다운로드를 시작할 수 없습니다."); }
     } else setStatus(completionMessage || "영상 기록에 실패했습니다.");
     releaseRecordingResources();
   }
@@ -84,5 +106,5 @@
     saveButton.title = "이 브라우저에서는 WebM 기록을 지원하지 않습니다.";
   }
   saveButton.addEventListener("click", startRecording);
-  window.webmRecordingConfig = { RECORDING_FPS, RECORDING_TAIL_MS, MIME_TYPES };
+  window.webmRecordingConfig = { RECORDING_FPS, RECORDING_TAIL_MS, MIME_TYPES, createFileName };
 })();

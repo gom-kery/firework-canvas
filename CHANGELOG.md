@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Unit 5.2 — Video Download
+
+- WebM Blob을 날짜·시간 기반 파일명으로 즉시 다운로드합니다.
+- 매 다운로드의 Object URL을 1초 뒤 해제해 반복 저장 시 URL 누적을 방지합니다.
+- 기록 중과 다운로드 시작 처리 중 Save Video 중복 입력을 막습니다.
+
 ### Unit 5.1A — Background Selection
 
 - Canvas 배경을 Default Gradient, 단색, 이미지 중 선택할 수 있게 했습니다.
