@@ -7,11 +7,14 @@
   let activeTiming = TIMELINE;
   const state = window.fireworkState;
   const previewButton = document.getElementById("previewButton");
+  const previewStatus = document.getElementById("previewStatus");
   const markerArea = document.getElementById("launchMarkerArea");
   const easeOutQuart = (progress) => 1 - Math.pow(1 - progress, 4);
   const easeInOutCubic = (progress) => progress < .5 ? 4 * progress ** 3 : 1 - ((-2 * progress + 2) ** 3) / 2;
   const getBurstPoint = () => window.getFireworkCompositionCenter ? window.getFireworkCompositionCenter() : ({ x: window.fireworkCanvas.width / 2, y: window.fireworkCanvas.height * .48 });
   const getLaunchPoints = (count) => Array.from({ length: count }, (_, index) => ({ x: window.fireworkCanvas.width * (index + 1) / (count + 1), y: window.fireworkCanvas.height - 14 }));
+  function setPreviewStatus(message) { previewStatus.textContent = message; previewStatus.hidden = !message; }
+  window.setPreviewStatus = setPreviewStatus;
   function createScaledTiming(rocketCount) {
     const baseTotal = TIMELINE.launch + TIMELINE.burst + TIMELINE.formation + TIMELINE.hold + TIMELINE.scatter + TIMELINE.fade + TIMELINE.rocketStagger * (rocketCount - 1);
     const scale = window.fireworkState.duration * 1000 / baseTotal;
@@ -96,11 +99,11 @@
       particle.x = particle.currentX; particle.y = particle.currentY;
     }
   }
-  function finishSequence(showStatic) {
+  function finishSequence(showStatic, message = "") {
     state.playing = false; state.formationProgress = 0; sequenceFrameId = null; particleFrameId = null; previewButton.disabled = false;
     setPhase(PHASE.COMPLETE);
     if (showStatic) { restoreParticleTargets(); window.renderStaticParticles(state.particles); } else window.drawCanvasBackground();
-    setMarkersVisible(true); setPhase(PHASE.IDLE);
+    setMarkersVisible(true); setPhase(PHASE.IDLE); setPreviewStatus(message);
   }
   function animateFade(startedAt, previousAt) {
     const now = performance.now(); const progress = Math.min((now - startedAt) / activeTiming.fade, 1);
@@ -108,7 +111,7 @@
     for (const particle of state.particles) particle.alpha = particle.baseAlpha * (1 - progress);
     renderParticles();
     if (progress < 1) { particleFrameId = requestAnimationFrame(() => animateFade(startedAt, now)); return; }
-    finishSequence(false);
+    finishSequence(false, "미리보기가 완료되었습니다.");
   }
   function animateScatter(startedAt, previousAt, origin) {
     const now = performance.now(); const progress = Math.min((now - startedAt) / activeTiming.scatter, 1);
@@ -146,11 +149,21 @@
     if (!allArrived) { sequenceFrameId = requestAnimationFrame(() => animateLaunch(startedAt, rockets, burstPoint)); return; }
     setPhase(PHASE.BURST); sequenceFrameId = requestAnimationFrame(() => animateBurst(performance.now(), burstPoint));
   }
-  window.stopFireworkSequence = () => { if (sequenceFrameId !== null) cancelAnimationFrame(sequenceFrameId); if (particleFrameId !== null) cancelAnimationFrame(particleFrameId); finishSequence(true); };
+  function cancelPlaybackFrames() {
+    if (sequenceFrameId !== null) cancelAnimationFrame(sequenceFrameId);
+    if (particleFrameId !== null) cancelAnimationFrame(particleFrameId);
+    sequenceFrameId = null; particleFrameId = null;
+  }
+  window.stopFireworkSequence = () => {
+    const wasPlaying = state.playing || sequenceFrameId !== null || particleFrameId !== null;
+    cancelPlaybackFrames();
+    if (wasPlaying) finishSequence(true);
+  };
   window.stopFormationAnimation = window.stopFireworkSequence;
   function startFireworkSequence() {
-    if (!state.particles.length) return;
-    if (state.playing) window.stopFireworkSequence();
+    if (!state.image || !state.particles.length) { setPreviewStatus("먼저 이미지를 업로드해주세요."); return; }
+    if (state.playing) return;
+    cancelPlaybackFrames(); restoreParticleTargets(); setPreviewStatus("");
     const burstPoint = getBurstPoint();
     activeTiming = createScaledTiming(state.launchPointCount);
     const rockets = getLaunchPoints(state.launchPointCount).map((point, index) => ({ startX: point.x, startY: point.y, x: point.x, y: point.y, burstX: burstPoint.x, burstY: burstPoint.y, progress: 0, delay: index * activeTiming.rocketStagger }));

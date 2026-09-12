@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Unit 4.2 — Preview Controller
+
+- 재생 시작 전 Particle 위치·속도·Alpha를 target 상태로 복원해 반복 Preview를 안정화했습니다.
+- 재생 중 Preview 버튼을 비활성화하고, Animation Frame 취소와 종료 처리를 한 곳에서 관리합니다.
+- 이미지가 없는 경우 업로드 안내를 표시하고, 정상 종료 시 완료 상태를 안내합니다.
+- Replay 시 이미지와 모든 사용자 설정은 유지합니다.
+
 ### Unit 4.1C — Firework Composition
 
 - Convert Canvas의 이미지 불꽃을 직접 드래그해 위치를 조정할 수 있게 했습니다.

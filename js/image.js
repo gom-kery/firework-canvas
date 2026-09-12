@@ -67,7 +67,7 @@
     state.image = image; state.imageWidth = image.naturalWidth; state.imageHeight = image.naturalHeight; state.imageObjectUrl = objectUrl;
     state.pickedColor = null; state.colorMode = "original"; state.framing = { shape: "rect", zoom: 1, offsetX: 0, offsetY: 0 }; zoomRange.value = "1";
     if (window.resetFireworkComposition) window.resetFireworkComposition();
-    previewStage.hidden = false; framingControls.hidden = false; if (window.setFireworkCompositionControlsVisible) window.setFireworkCompositionControlsVisible(true); canvasLabel.hidden = true; deleteButton.disabled = false; previewButton.disabled = false; updateImageAction();
+    previewStage.hidden = false; framingControls.hidden = false; if (window.setFireworkCompositionControlsVisible) window.setFireworkCompositionControlsVisible(true); canvasLabel.hidden = true; deleteButton.disabled = false; previewButton.disabled = false; if (window.setPreviewStatus) window.setPreviewStatus(""); updateImageAction();
     rebuildFramedParticles(); window.applyColorMode("original", document.querySelector('[data-color-mode="original"]'));
   }
   function loadImage(file) {
@@ -82,7 +82,7 @@
   function deleteImage() {
     if (state.playing && window.stopFireworkSequence) window.stopFireworkSequence();
     loadSequence += 1; resetImageState(); input.value = ""; previewStage.hidden = true; framingControls.hidden = true; if (window.setFireworkCompositionControlsVisible) window.setFireworkCompositionControlsVisible(false); canvasLabel.hidden = false;
-    deleteButton.disabled = true; previewButton.disabled = true; updateImageAction(); clearError(); window.drawCanvasBackground();
+    deleteButton.disabled = true; previewButton.disabled = false; if (window.setPreviewStatus) window.setPreviewStatus(""); updateImageAction(); clearError(); window.drawCanvasBackground();
   }
   window.updatePickPreviewState = function updatePickPreviewState() { previewCanvas.classList.toggle("is-picking", state.colorMode === "pick" && Boolean(state.image)); };
   function sourcePointFromEvent(event) {

@@ -14,7 +14,7 @@
 | 3.1 — Original / Palette | 완료 | Original RGB 및 Quantization Palette 색상 모드 검증 완료 |
 | 3.2 — Color Picker | 완료 | Preview 좌표 변환, Pixel Pick, 강조색 Blend 검증 완료 |
 | 4.1 — Duration & Ratio | 완료 | Timeline Scale 및 1:1 / 9:16 Canvas 재계산 검증 완료 |
-| 4.2 — Preview Controller | 대기 | 진행하지 않음 |
+| 4.2 — Preview Controller | 검증 대기 | 반복 재생·상태 안내·Reset 구현 |
 
 ## Planned refinements
 
@@ -31,7 +31,7 @@
 - 하나의 동작 버튼은 이미지가 없을 때 Upload, 이미지가 있을 때 Change로 표시합니다.
 - Delete와 편집 미리보기, Image Framing 컨트롤의 순서를 정리합니다.
 
-### Unit 4.1C — Firework Composition — 검증 대기
+### Unit 4.1C — Firework Composition — 완료
 
 - Convert Canvas 안에서 최종 이미지 불꽃의 크기와 표시 위치를 조정하는 컨트롤을 추가합니다.
 - Composition 변경 시 Particle target, Burst 위치, Formation 및 Scatter의 기준점을 함께 다시 계산합니다.
