@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Unit 2.1 — Formation Animation
+
+- Preview 버튼을 Unit 2.1의 임시 Formation 실행 트리거로 연결했습니다.
+- Particle을 Canvas 중앙 주변의 무작위 시작 위치에서 target 위치로 이동시킵니다.
+- `requestAnimationFrame`, 경과 시간, ease-out quart 보간을 사용해 1초 Formation을 구현했습니다.
+- 재실행, 이미지 교체, 삭제, Particle Preset 변경 시 실행 중인 Animation Frame을 안전하게 정리합니다.
+
 ### Unit 1.2 — Particle Quality
 
 - Low(약 2,000), Normal(약 5,000), High(약 9,000) Particle 상한 프리셋을 추가했습니다.

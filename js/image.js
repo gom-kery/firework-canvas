@@ -11,6 +11,7 @@
   const placeholder = document.getElementById("uploadPlaceholder");
   const errorMessage = document.getElementById("errorMessage");
   const canvasLabel = document.getElementById("canvasLabel");
+  const previewButton = document.getElementById("previewButton");
   let loadSequence = 0;
 
   function showError(message) { errorMessage.textContent = message; errorMessage.hidden = false; }
@@ -23,6 +24,7 @@
     state.playing = false; state.recording = false; state.previewReady = false;
   }
   function showUploadedImage(image, objectUrl) {
+    if (state.playing && window.stopFormationAnimation) window.stopFormationAnimation();
     const startedAt = performance.now();
     const particles = window.createParticlesFromImage(image);
     if (state.imageObjectUrl) URL.revokeObjectURL(state.imageObjectUrl);
@@ -30,6 +32,7 @@
     state.particles = particles; state.particleBuildMs = performance.now() - startedAt; state.previewReady = true;
     preview.src = objectUrl; preview.hidden = false; placeholder.hidden = true; canvasLabel.hidden = true;
     changeButton.disabled = false; deleteButton.disabled = false;
+    previewButton.disabled = false;
     window.renderStaticParticles(state.particles);
   }
   function loadImage(file) {
@@ -44,8 +47,9 @@
   }
   function chooseImage() { input.click(); }
   function deleteImage() {
+    if (state.playing && window.stopFormationAnimation) window.stopFormationAnimation();
     loadSequence += 1; resetImageState(); input.value = ""; preview.removeAttribute("src"); preview.hidden = true;
-    placeholder.hidden = false; canvasLabel.hidden = false; changeButton.disabled = true; deleteButton.disabled = true; clearError(); window.drawCanvasBackground();
+    placeholder.hidden = false; canvasLabel.hidden = false; changeButton.disabled = true; deleteButton.disabled = true; previewButton.disabled = true; clearError(); window.drawCanvasBackground();
   }
   uploadButton.addEventListener("click", chooseImage);
   changeButton.addEventListener("click", chooseImage);

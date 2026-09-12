@@ -7,6 +7,7 @@ window.fireworkState = {
   pickedColor: null,
   particleMode: "normal",
   particleBuildMs: 0,
+  formationProgress: 0,
   playing: false,
   recording: false,
   previewReady: false
