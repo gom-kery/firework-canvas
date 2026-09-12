@@ -35,7 +35,17 @@
 
   window.createParticlesFromImage = function createParticlesFromImage(image, mode = state.particleMode) {
     const source = window.getFramedSourceRect(image, window.fireworkCanvas.width, window.fireworkCanvas.height);
-    const bounds = getFittedBounds(source, window.fireworkCanvas);
+    const baseBounds = getFittedBounds(source, window.fireworkCanvas);
+    const availableWidth = window.fireworkCanvas.width - CANVAS_PADDING * 2;
+    const availableHeight = window.fireworkCanvas.height - CANVAS_PADDING * 2;
+    const requestedScale = state.composition.scale;
+    const safeScale = Math.min(requestedScale, availableWidth / baseBounds.width, availableHeight / baseBounds.height);
+    const width = Math.max(1, Math.round(baseBounds.width * safeScale));
+    const height = Math.max(1, Math.round(baseBounds.height * safeScale));
+    const horizontalRange = Math.max(0, (window.fireworkCanvas.width - width) / 2 - CANVAS_PADDING);
+    const verticalRange = Math.max(0, (window.fireworkCanvas.height - height) / 2 - CANVAS_PADDING);
+    const bounds = { width, height, x: Math.round((window.fireworkCanvas.width - width) / 2 + state.composition.offsetX * horizontalRange), y: Math.round((window.fireworkCanvas.height - height) / 2 + state.composition.offsetY * verticalRange) };
+    state.compositionBounds = bounds;
     const step = getSamplingStep(bounds.width, bounds.height, PARTICLE_PRESETS[mode]);
     samplingCanvas.width = bounds.width; samplingCanvas.height = bounds.height;
     samplingContext.clearRect(0, 0, bounds.width, bounds.height);

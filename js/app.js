@@ -11,6 +11,8 @@ window.fireworkState = {
   duration: 5,
   ratio: "1:1",
   framing: { shape: "rect", zoom: 1, offsetX: 0, offsetY: 0 },
+  composition: { scale: 1, offsetX: 0, offsetY: 0 },
+  compositionBounds: null,
   particleBuildMs: 0,
   formationProgress: 0,
   launchPointCount: 1,
@@ -48,6 +50,63 @@ function rebuildParticlesForCanvas() {
   window.applyColorMode(state.colorMode);
   if (window.renderImageFramingPreview) window.renderImageFramingPreview();
 }
+
+(() => {
+  const state = window.fireworkState;
+  const canvas = window.fireworkCanvas;
+  const controls = document.getElementById("compositionControls");
+  const scaleInput = document.getElementById("compositionScale");
+  const scaleValue = document.getElementById("compositionScaleValue");
+  const resetButton = document.getElementById("compositionReset");
+  let dragStart = null;
+  let pendingRender = null;
+  const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+  function updateScaleValue() { scaleValue.value = `${Math.round(state.composition.scale * 100)}%`; scaleValue.textContent = scaleValue.value; }
+  function renderComposition() {
+    pendingRender = null;
+    if (!state.image || state.playing) return;
+    rebuildParticlesForCanvas();
+  }
+  function requestCompositionRender() {
+    if (pendingRender !== null) return;
+    pendingRender = requestAnimationFrame(renderComposition);
+  }
+  function resetComposition() {
+    state.composition = { scale: 1, offsetX: 0, offsetY: 0 };
+    scaleInput.value = "1"; updateScaleValue();
+  }
+  window.resetFireworkComposition = resetComposition;
+  window.setFireworkCompositionControlsVisible = (visible) => { controls.hidden = !visible; };
+  window.getFireworkCompositionCenter = () => {
+    const bounds = state.compositionBounds;
+    return bounds ? { x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2 } : { x: canvas.width / 2, y: canvas.height * .48 };
+  };
+  scaleInput.addEventListener("input", () => {
+    if (!state.image || state.playing) return;
+    state.composition.scale = Number(scaleInput.value); updateScaleValue(); requestCompositionRender();
+  });
+  resetButton.addEventListener("click", () => { if (!state.image || state.playing) return; resetComposition(); requestCompositionRender(); });
+  canvas.addEventListener("pointerdown", (event) => {
+    if (!state.image || state.playing || !state.compositionBounds) return;
+    const bounds = state.compositionBounds;
+    const horizontalRange = Math.max((canvas.width - bounds.width) / 2, 1);
+    const verticalRange = Math.max((canvas.height - bounds.height) / 2, 1);
+    dragStart = { x: event.clientX, y: event.clientY, offsetX: state.composition.offsetX, offsetY: state.composition.offsetY, horizontalRange, verticalRange };
+    canvas.setPointerCapture(event.pointerId); canvas.classList.add("is-composing");
+  });
+  canvas.addEventListener("pointermove", (event) => {
+    if (!dragStart) return;
+    const rect = canvas.getBoundingClientRect();
+    const deltaX = (event.clientX - dragStart.x) * canvas.width / rect.width;
+    const deltaY = (event.clientY - dragStart.y) * canvas.height / rect.height;
+    state.composition.offsetX = clamp(dragStart.offsetX + deltaX / dragStart.horizontalRange, -1, 1);
+    state.composition.offsetY = clamp(dragStart.offsetY + deltaY / dragStart.verticalRange, -1, 1);
+    requestCompositionRender();
+  });
+  function endCompositionDrag() { if (!dragStart) return; dragStart = null; canvas.classList.remove("is-composing"); }
+  canvas.addEventListener("pointerup", endCompositionDrag); canvas.addEventListener("pointercancel", endCompositionDrag);
+  updateScaleValue();
+})();
 
 window.setCanvasRatio = function setCanvasRatio(ratio, button) {
   const state = window.fireworkState;

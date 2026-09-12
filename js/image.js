@@ -50,6 +50,7 @@
   function resetImageState() {
     if (state.imageObjectUrl) URL.revokeObjectURL(state.imageObjectUrl);
     state.image = null; state.imageWidth = 0; state.imageHeight = 0; state.imageObjectUrl = null; state.particles = [];
+    state.compositionBounds = null;
     state.pickedColor = null; state.palette = []; state.particleBuildMs = 0; state.playing = false; state.recording = false; state.previewReady = false;
     state.framing = { shape: "rect", zoom: 1, offsetX: 0, offsetY: 0 }; zoomRange.value = "1";
     const swatches = document.getElementById("paletteSwatches"); swatches.replaceChildren(); swatches.hidden = true;
@@ -65,7 +66,8 @@
     if (state.imageObjectUrl) URL.revokeObjectURL(state.imageObjectUrl);
     state.image = image; state.imageWidth = image.naturalWidth; state.imageHeight = image.naturalHeight; state.imageObjectUrl = objectUrl;
     state.pickedColor = null; state.colorMode = "original"; state.framing = { shape: "rect", zoom: 1, offsetX: 0, offsetY: 0 }; zoomRange.value = "1";
-    previewStage.hidden = false; framingControls.hidden = false; canvasLabel.hidden = true; deleteButton.disabled = false; previewButton.disabled = false; updateImageAction();
+    if (window.resetFireworkComposition) window.resetFireworkComposition();
+    previewStage.hidden = false; framingControls.hidden = false; if (window.setFireworkCompositionControlsVisible) window.setFireworkCompositionControlsVisible(true); canvasLabel.hidden = true; deleteButton.disabled = false; previewButton.disabled = false; updateImageAction();
     rebuildFramedParticles(); window.applyColorMode("original", document.querySelector('[data-color-mode="original"]'));
   }
   function loadImage(file) {
@@ -79,7 +81,7 @@
   function chooseImage() { input.click(); }
   function deleteImage() {
     if (state.playing && window.stopFireworkSequence) window.stopFireworkSequence();
-    loadSequence += 1; resetImageState(); input.value = ""; previewStage.hidden = true; framingControls.hidden = true; canvasLabel.hidden = false;
+    loadSequence += 1; resetImageState(); input.value = ""; previewStage.hidden = true; framingControls.hidden = true; if (window.setFireworkCompositionControlsVisible) window.setFireworkCompositionControlsVisible(false); canvasLabel.hidden = false;
     deleteButton.disabled = true; previewButton.disabled = true; updateImageAction(); clearError(); window.drawCanvasBackground();
   }
   window.updatePickPreviewState = function updatePickPreviewState() { previewCanvas.classList.toggle("is-picking", state.colorMode === "pick" && Boolean(state.image)); };

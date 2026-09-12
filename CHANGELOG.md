@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Unit 4.1C — Firework Composition
+
+- Convert Canvas의 이미지 불꽃을 직접 드래그해 위치를 조정할 수 있게 했습니다.
+- Scale 슬라이더와 Reset 버튼을 추가했습니다.
+- Composition 변경 시 Particle target 위치와 Burst·Formation·Scatter 중심점을 함께 갱신합니다.
+
 ### Unit 4.1B — Upload Image UI Refinement
 
 - Upload Image 패널을 파일 형식·용량 안내, Upload/Change와 Delete 버튼, 편집 미리보기 순서로 재구성했습니다.

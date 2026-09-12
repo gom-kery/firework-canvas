@@ -10,7 +10,7 @@
   const markerArea = document.getElementById("launchMarkerArea");
   const easeOutQuart = (progress) => 1 - Math.pow(1 - progress, 4);
   const easeInOutCubic = (progress) => progress < .5 ? 4 * progress ** 3 : 1 - ((-2 * progress + 2) ** 3) / 2;
-  const getBurstPoint = () => ({ x: window.fireworkCanvas.width / 2, y: window.fireworkCanvas.height * .48 });
+  const getBurstPoint = () => window.getFireworkCompositionCenter ? window.getFireworkCompositionCenter() : ({ x: window.fireworkCanvas.width / 2, y: window.fireworkCanvas.height * .48 });
   const getLaunchPoints = (count) => Array.from({ length: count }, (_, index) => ({ x: window.fireworkCanvas.width * (index + 1) / (count + 1), y: window.fireworkCanvas.height - 14 }));
   function createScaledTiming(rocketCount) {
     const baseTotal = TIMELINE.launch + TIMELINE.burst + TIMELINE.formation + TIMELINE.hold + TIMELINE.scatter + TIMELINE.fade + TIMELINE.rocketStagger * (rocketCount - 1);
