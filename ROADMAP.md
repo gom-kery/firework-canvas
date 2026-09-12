@@ -1,10 +1,9 @@
 # Firework Canvas — MVP Roadmap Status
 
-원본 개발 계획은 읽기 전용 기준 문서인 `sources/Firework Canvas — ROADMAP.md`에 보관합니다.
-
-## Phase 0 — Foundation
+원본 PROJECT_BIBLE 및 ROADMAP은 작업 환경 복원 시 `sources/`에 다시 제공되어야 합니다.
 
 | Unit | 상태 | 비고 |
 | --- | --- | --- |
-| 0.1 — Project Setup | 완료 | 기본 프로젝트 구조 및 UI Shell 구성 |
-| 0.2 — Image Upload | 대기 | 아직 진행하지 않음 |
+| 0.1 — Project Setup | 완료 | 기본 UI Shell |
+| 0.2 — Image Upload | 완료 | Upload, Preview, Change, Delete |
+| 1.1 — Particle Sampling | 대기 | 진행하지 않음 |

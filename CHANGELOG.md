@@ -2,10 +2,10 @@
 
 ## Unreleased
 
-### Unit 0.1 — Project Setup
+### Unit 0.2 — Image Upload
 
-- Desktop용 좌·우 작업 레이아웃과 Convert Firework Canvas UI Shell을 구성했습니다.
-- Upload Image 미리보기 영역, Change / Delete 버튼, Color, Particles, Duration, Ratio, Launch Points UI를 추가했습니다.
-- Convert Firework Canvas 하단의 Launch Point Marker 영역을 1개 기본값으로 준비했습니다.
-- Preview 및 Save Video 버튼을 포함했습니다.
-- 모든 버튼은 이번 Unit 범위에 따라 동작 로직 없이 UI만 제공합니다.
+- JPG, JPEG, PNG, WebP 이미지 업로드와 10MB 제한을 추가했습니다.
+- 업로드한 원본 이미지를 비율 유지 상태로 Preview에 표시합니다.
+- Change와 Delete 흐름, 이미지 상태 초기화, Object URL 해제를 구현했습니다.
+- 유효하지 않은 파일, 용량 초과, 이미지 Decode 실패 오류를 표시합니다.
+- Particle 및 불꽃 애니메이션 기능은 구현하지 않았습니다.

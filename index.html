@@ -1,39 +1,40 @@
 <!doctype html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Firework Canvas UI Shell" />
-    <title>Firework Canvas</title>
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
-  <body>
-    <main class="app-shell">
-      <header class="app-header"><p class="eyebrow">IMAGE TO FIREWORK</p><h1>Firework Canvas</h1></header>
-      <section class="workspace" aria-label="Firework Canvas 작업 영역">
-        <section class="convert-panel" aria-labelledby="convert-title">
-          <div class="canvas-stage">
-            <canvas id="fireworkCanvas" width="900" height="700" aria-label="Convert Firework Canvas"></canvas>
-            <div class="canvas-label"><span>✦</span><h2 id="convert-title">Convert Firework Canvas</h2><p>불꽃 애니메이션이 이곳에서 만들어집니다.</p></div>
-          </div>
-          <div class="launch-marker-area" aria-label="Launch Point Marker 영역"><span class="marker-line" aria-hidden="true"></span><span class="launch-marker" aria-label="Launch Point Marker 1"></span></div>
-        </section>
-        <aside class="settings-panel" aria-label="Firework 설정">
-          <section class="upload-preview" aria-labelledby="upload-title">
-            <div class="upload-placeholder"><span class="upload-icon">↑</span><h2 id="upload-title">Upload Image</h2><p>이미지 미리보기 영역</p></div>
-            <div class="upload-actions"><button type="button" class="button button-secondary">Change</button><button type="button" class="button button-secondary">Delete</button></div>
-          </section>
-          <fieldset class="control-group"><legend>Color</legend><div class="option-row"><button type="button" class="option-button is-selected">Original</button><button type="button" class="option-button">Palette</button><button type="button" class="option-button">Pick</button></div></fieldset>
-          <fieldset class="control-group"><legend>Particles</legend><div class="option-row"><button type="button" class="option-button">Low</button><button type="button" class="option-button is-selected">Normal</button><button type="button" class="option-button">High</button></div></fieldset>
-          <div class="paired-controls">
-            <fieldset class="control-group"><legend>Duration</legend><div class="option-row"><button type="button" class="option-button">3s</button><button type="button" class="option-button is-selected">5s</button></div></fieldset>
-            <fieldset class="control-group"><legend>Ratio</legend><div class="option-row"><button type="button" class="option-button is-selected">1:1</button><button type="button" class="option-button">9:16</button></div></fieldset>
-          </div>
-          <fieldset class="control-group"><legend>Launch Points</legend><div class="option-row launch-options" aria-label="Launch Point 개수"><button type="button" class="option-button is-selected">1</button><button type="button" class="option-button">2</button><button type="button" class="option-button">3</button><button type="button" class="option-button">4</button><button type="button" class="option-button">5</button></div></fieldset>
-        </aside>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="이미지를 불꽃으로 변환하는 Firework Canvas" />
+  <title>Firework Canvas</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header"><p>IMAGE TO FIREWORK</p><h1>Firework Canvas</h1></header>
+    <section class="workspace" aria-label="Firework Canvas 작업 영역">
+      <section class="convert-panel" aria-labelledby="convert-title">
+        <div class="canvas-stage">
+          <canvas id="fireworkCanvas" width="900" height="700" aria-label="Convert Firework Canvas"></canvas>
+          <div class="canvas-label" id="canvasLabel"><span>✦</span><h2 id="convert-title">Convert Firework Canvas</h2><p>업로드한 이미지를 이곳에서 확인합니다.</p></div>
+        </div>
+        <div class="launch-marker-area" aria-label="Launch Point Marker 영역"><span class="marker-line"></span><span class="launch-marker" aria-label="Launch Point Marker 1"></span></div>
       </section>
-      <div class="main-actions"><button type="button" class="button button-preview">▶ Preview</button><button type="button" class="button button-save">↓ Save Video</button></div>
-    </main>
-    <script src="js/app.js"></script>
-  </body>
+      <aside class="settings-panel" aria-label="Firework 설정">
+        <section class="upload-preview" aria-labelledby="upload-title">
+          <div class="upload-placeholder" id="uploadPlaceholder"><span>↑</span><h2 id="upload-title">Upload Image</h2><p>JPG, PNG 또는 WebP · 최대 10MB</p><button class="button button-upload" id="uploadButton" type="button">Upload Image</button></div>
+          <img id="imagePreview" alt="업로드한 원본 이미지 미리보기" hidden />
+          <p class="error-message" id="errorMessage" role="alert" hidden></p>
+          <div class="upload-actions"><button class="button button-secondary" id="changeButton" type="button" disabled>Change</button><button class="button button-secondary" id="deleteButton" type="button" disabled>Delete</button></div>
+          <input id="imageInput" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" hidden />
+        </section>
+        <fieldset class="control-group"><legend>Color</legend><div class="option-row"><button class="option-button is-selected" type="button">Original</button><button class="option-button" type="button">Palette</button><button class="option-button" type="button">Pick</button></div></fieldset>
+        <fieldset class="control-group"><legend>Particles</legend><div class="option-row"><button class="option-button" type="button">Low</button><button class="option-button is-selected" type="button">Normal</button><button class="option-button" type="button">High</button></div></fieldset>
+        <div class="paired-controls"><fieldset class="control-group"><legend>Duration</legend><div class="option-row"><button class="option-button" type="button">3s</button><button class="option-button is-selected" type="button">5s</button></div></fieldset><fieldset class="control-group"><legend>Ratio</legend><div class="option-row"><button class="option-button is-selected" type="button">1:1</button><button class="option-button" type="button">9:16</button></div></fieldset></div>
+        <fieldset class="control-group"><legend>Launch Points</legend><div class="option-row"><button class="option-button is-selected" type="button">1</button><button class="option-button" type="button">2</button><button class="option-button" type="button">3</button><button class="option-button" type="button">4</button><button class="option-button" type="button">5</button></div></fieldset>
+      </aside>
+    </section>
+    <div class="main-actions"><button class="button button-preview" type="button">▶ Preview</button><button class="button button-save" type="button">↓ Save Video</button></div>
+  </main>
+  <script src="js/app.js"></script>
+  <script src="js/image.js"></script>
+</body>
 </html>
