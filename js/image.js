@@ -5,14 +5,12 @@
   const state = window.fireworkState;
   const input = document.getElementById("imageInput");
   const uploadButton = document.getElementById("uploadButton");
-  const changeButton = document.getElementById("changeButton");
   const deleteButton = document.getElementById("deleteButton");
   const previewStage = document.getElementById("previewImageStage");
   const previewCanvas = document.getElementById("imagePreviewCanvas");
   const previewContext = previewCanvas.getContext("2d", { willReadFrequently: true });
   const framingControls = document.getElementById("framingControls");
   const zoomRange = document.getElementById("zoomRange");
-  const placeholder = document.getElementById("uploadPlaceholder");
   const errorMessage = document.getElementById("errorMessage");
   const canvasLabel = document.getElementById("canvasLabel");
   const previewButton = document.getElementById("previewButton");
@@ -24,6 +22,7 @@
 
   function showError(message) { errorMessage.textContent = message; errorMessage.hidden = false; }
   function clearError() { errorMessage.textContent = ""; errorMessage.hidden = true; }
+  function updateImageAction() { uploadButton.textContent = state.image ? "Change" : "Upload"; }
   function isAllowedImage(file) { return allowedTypes.has(file.type) || allowedExtensions.has(file.name.split(".").pop().toLowerCase()); }
   function drawCropOverlay() {
     if (state.framing.shape !== "circle") return;
@@ -56,7 +55,7 @@
     if (state.imageObjectUrl) URL.revokeObjectURL(state.imageObjectUrl);
     state.image = image; state.imageWidth = image.naturalWidth; state.imageHeight = image.naturalHeight; state.imageObjectUrl = objectUrl;
     state.pickedColor = null; state.colorMode = "original"; state.framing = { shape: "rect", zoom: 1, offsetX: 0, offsetY: 0 }; zoomRange.value = "1";
-    placeholder.hidden = true; previewStage.hidden = false; framingControls.hidden = false; canvasLabel.hidden = true; changeButton.disabled = false; deleteButton.disabled = false; previewButton.disabled = false;
+    previewStage.hidden = false; framingControls.hidden = false; canvasLabel.hidden = true; deleteButton.disabled = false; previewButton.disabled = false; updateImageAction();
     rebuildFramedParticles(); window.applyColorMode("original", document.querySelector('[data-color-mode="original"]'));
   }
   function loadImage(file) {
@@ -70,8 +69,8 @@
   function chooseImage() { input.click(); }
   function deleteImage() {
     if (state.playing && window.stopFireworkSequence) window.stopFireworkSequence();
-    loadSequence += 1; resetImageState(); input.value = ""; previewStage.hidden = true; framingControls.hidden = true; placeholder.hidden = false; canvasLabel.hidden = false;
-    changeButton.disabled = true; deleteButton.disabled = true; previewButton.disabled = true; clearError(); window.drawCanvasBackground();
+    loadSequence += 1; resetImageState(); input.value = ""; previewStage.hidden = true; framingControls.hidden = true; canvasLabel.hidden = false;
+    deleteButton.disabled = true; previewButton.disabled = true; updateImageAction(); clearError(); window.drawCanvasBackground();
   }
   window.updatePickPreviewState = function updatePickPreviewState() { previewCanvas.classList.toggle("is-picking", state.colorMode === "pick" && Boolean(state.image)); };
   function sourcePointFromEvent(event) {
@@ -101,7 +100,7 @@
   function endDrag() { if (!dragStart) return; dragStart = null; rebuildFramedParticles(); }
   document.querySelectorAll("[data-crop-shape]").forEach((button) => button.addEventListener("click", () => { if (state.playing || !state.image) return; state.framing.shape = button.dataset.cropShape; document.querySelectorAll("[data-crop-shape]").forEach((item) => item.classList.toggle("is-selected", item === button)); rebuildFramedParticles(); }));
   zoomRange.addEventListener("input", () => { if (state.playing || !state.image) return; state.framing.zoom = Number(zoomRange.value); rebuildFramedParticles(); });
-  uploadButton.addEventListener("click", chooseImage); changeButton.addEventListener("click", chooseImage); deleteButton.addEventListener("click", deleteImage);
+  uploadButton.addEventListener("click", chooseImage); deleteButton.addEventListener("click", deleteImage);
   input.addEventListener("change", () => { const [file] = input.files; if (file) loadImage(file); input.value = ""; });
   previewCanvas.addEventListener("click", pickColorAt); previewCanvas.addEventListener("pointerdown", startDrag); previewCanvas.addEventListener("pointermove", dragImage); previewCanvas.addEventListener("pointerup", endDrag); previewCanvas.addEventListener("pointercancel", endDrag);
 })();

@@ -19,11 +19,11 @@
         <div class="launch-marker-area" id="launchMarkerArea" aria-label="Launch Point Marker 영역"></div>
       </section>
       <aside class="settings-panel" aria-label="Firework 설정">
-        <section class="upload-preview" aria-labelledby="upload-title">
-          <div class="upload-placeholder" id="uploadPlaceholder"><span>↑</span><h2 id="upload-title">Upload Image</h2><p>JPG, PNG 또는 WebP · 최대 10MB</p><button class="button button-upload" id="uploadButton" type="button">Upload Image</button></div>
+        <section class="upload-preview" aria-label="Upload Image">
+          <p class="upload-rules">JPG, PNG 또는 WebP · 최대 10MB</p>
+          <div class="upload-actions"><button class="button button-secondary" id="uploadButton" type="button">Upload</button><button class="button button-secondary" id="deleteButton" type="button" disabled>Delete</button></div>
           <div class="preview-image-stage" id="previewImageStage" hidden><canvas id="imagePreviewCanvas" width="340" height="205" aria-label="업로드 이미지 편집 미리보기"></canvas></div>
           <p class="error-message" id="errorMessage" role="alert" hidden></p>
-          <div class="upload-actions"><button class="button button-secondary" id="changeButton" type="button" disabled>Change</button><button class="button button-secondary" id="deleteButton" type="button" disabled>Delete</button></div>
           <input id="imageInput" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" hidden />
         </section>
         <fieldset class="control-group framing-controls" id="framingControls" hidden><legend>Image Framing</legend><div class="option-row"><button class="option-button is-selected" type="button" data-crop-shape="rect">Rectangle</button><button class="option-button" type="button" data-crop-shape="circle">Circle</button></div><label class="zoom-control" for="zoomRange">Zoom <input id="zoomRange" type="range" min="1" max="2.5" step="0.05" value="1" /></label><p class="framing-hint">미리보기를 드래그해 위치를 조정하세요.</p></fieldset>

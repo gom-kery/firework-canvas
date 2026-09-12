@@ -25,6 +25,12 @@
 - 3초 Timeline의 Launch / Formation / Hold / Fade 비율을 조정해 이미지 인식 시간을 확보합니다.
 - 출력 Ratio를 1:1 / 3:4 / 4:3으로 변경하고 기존 9:16은 제거합니다.
 
+### Unit 4.1B — Upload Image UI Refinement — 검증 대기
+
+- 업로드 패널의 큰 초기 안내를 제거하고, 지원 형식·용량 안내만 표시합니다.
+- 하나의 동작 버튼은 이미지가 없을 때 Upload, 이미지가 있을 때 Change로 표시합니다.
+- Delete와 편집 미리보기, Image Framing 컨트롤의 순서를 정리합니다.
+
 ### Unit 6.1 — Responsive UI additions
 
 - Upload 버튼을 Change / Delete Action 영역에 통합합니다. 이미지가 없을 때는 Upload, 이미지가 있으면 Change를 표시합니다.

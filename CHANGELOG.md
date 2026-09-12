@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Unit 4.1B — Upload Image UI Refinement
+
+- Upload Image 패널을 파일 형식·용량 안내, Upload/Change와 Delete 버튼, 편집 미리보기 순서로 재구성했습니다.
+- 큰 초기 Upload 안내와 별도의 Change 버튼을 제거했습니다.
+- 이미지 상태에 따라 하나의 버튼이 Upload 또는 Change로 자동 전환됩니다.
+
 ### Unit 4.1A — Image Framing & Pacing
 
 - 사각형과 원형 Crop, Preview 드래그 이동, 1~2.5배 확대를 추가했습니다.
