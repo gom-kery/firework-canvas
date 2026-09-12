@@ -13,6 +13,7 @@ window.fireworkState = {
   framing: { shape: "rect", zoom: 1, offsetX: 0, offsetY: 0 },
   composition: { scale: 1, offsetX: 0, offsetY: 0 },
   compositionBounds: null,
+  background: { mode: "default", color: "#0b1026", image: null, imageObjectUrl: null },
   particleBuildMs: 0,
   formationProgress: 0,
   launchPointCount: 1,
@@ -27,6 +28,19 @@ window.fireworkCanvas = document.getElementById("fireworkCanvas");
 window.fireworkContext = window.fireworkCanvas.getContext("2d");
 window.drawCanvasBackground = function drawCanvasBackground() {
   const { fireworkCanvas: canvas, fireworkContext: context } = window;
+  const background = window.fireworkState.background;
+  if (background.mode === "image" && background.image) {
+    const scale = Math.max(canvas.width / background.image.naturalWidth, canvas.height / background.image.naturalHeight);
+    const width = background.image.naturalWidth * scale;
+    const height = background.image.naturalHeight * scale;
+    context.drawImage(background.image, (canvas.width - width) / 2, (canvas.height - height) / 2, width, height);
+    return;
+  }
+  if (background.mode === "solid") {
+    context.fillStyle = background.color;
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    return;
+  }
   const gradient = context.createLinearGradient(0, 0, 0, canvas.height);
   gradient.addColorStop(0, "#142456");
   gradient.addColorStop(1, "#03040b");

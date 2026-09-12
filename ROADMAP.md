@@ -16,6 +16,7 @@
 | 4.1 — Duration & Ratio | 완료 | Timeline Scale 및 1:1 / 9:16 Canvas 재계산 검증 완료 |
 | 4.2 — Preview Controller | 완료 | 반복 재생·상태 안내·Reset 구현 |
 | 5.1 — WebM Recording | 검증 대기 | Canvas Capture 및 WebM Blob 기록 구현 |
+| 5.1A — Background Selection | 검증 대기 | Default, Solid Color, Image Background |
 
 ## Planned refinements
 

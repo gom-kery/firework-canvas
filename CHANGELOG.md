@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Unit 5.1A — Background Selection
+
+- Canvas 배경을 Default Gradient, 단색, 이미지 중 선택할 수 있게 했습니다.
+- 선택한 배경은 정적 Particle, Preview Animation, WebM Capture에 공통으로 적용됩니다.
+
 ### Unit 5.1 — WebM Recording
 
 - Canvas Capture Stream과 MediaRecorder로 동일한 Animation Cycle을 WebM Blob으로 기록합니다.
