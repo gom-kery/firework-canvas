@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Unit 4.1 — Duration & Ratio
+
+- 3초와 5초 전체 Duration을 공통 Timeline 비율로 Scale합니다.
+- Rocket 수에 따른 Launch Stagger까지 포함해 각 실행의 총 시간을 계산합니다.
+- Preview Canvas에 1:1(720×720), 9:16(720×1280) 내부 해상도를 연결했습니다.
+- Ratio 변경 시 Particle target, Palette/Pick 색상, Burst Point, Launch Points, Marker를 재계산합니다.
+- Animation 실행 중 Duration과 Ratio 변경은 무시해 Canvas 상태가 깨지지 않도록 했습니다.
+
 ### Unit 3.2 — Color Picker
 
 - Pick Mode에서 Preview의 실제 이미지 영역만 클릭 가능하도록 좌표를 원본 이미지 좌표로 변환했습니다.

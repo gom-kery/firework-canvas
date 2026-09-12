@@ -1,9 +1,10 @@
 (function setupFireworkSequence() {
-  const TIMING = { launch: 780, rocketStagger: 55, burst: 260, formation: 1000, hold: 700, scatter: 850, fade: 700 };
+  const TIMELINE = { launch: 780, rocketStagger: 55, burst: 260, formation: 1000, hold: 700, scatter: 850, fade: 700 };
   const SCATTER = { spread: 44, speed: 1.65, randomness: 0.7, gravity: 0.035, friction: 0.982 };
   const PHASE = { IDLE: "IDLE", LAUNCH: "LAUNCH", BURST: "BURST", FORMATION: "FORMATION", HOLD: "HOLD", SCATTER: "SCATTER", FADE: "FADE", COMPLETE: "COMPLETE" };
   let sequenceFrameId = null;
   let particleFrameId = null;
+  let activeTiming = TIMELINE;
   const state = window.fireworkState;
   const previewButton = document.getElementById("previewButton");
   const markerArea = document.getElementById("launchMarkerArea");
@@ -11,6 +12,11 @@
   const easeInOutCubic = (progress) => progress < .5 ? 4 * progress ** 3 : 1 - ((-2 * progress + 2) ** 3) / 2;
   const getBurstPoint = () => ({ x: window.fireworkCanvas.width / 2, y: window.fireworkCanvas.height * .48 });
   const getLaunchPoints = (count) => Array.from({ length: count }, (_, index) => ({ x: window.fireworkCanvas.width * (index + 1) / (count + 1), y: window.fireworkCanvas.height - 14 }));
+  function createScaledTiming(rocketCount) {
+    const baseTotal = TIMELINE.launch + TIMELINE.burst + TIMELINE.formation + TIMELINE.hold + TIMELINE.scatter + TIMELINE.fade + TIMELINE.rocketStagger * (rocketCount - 1);
+    const scale = window.fireworkState.duration * 1000 / baseTotal;
+    return Object.fromEntries(Object.entries(TIMELINE).map(([key, value]) => [key, value * scale]));
+  }
 
   function setPhase(phase) { state.phase = phase; }
   function renderLaunchMarkers() {
@@ -20,6 +26,7 @@
       const marker = document.createElement("span"); marker.className = "launch-marker";
       marker.style.left = `${point.x / window.fireworkCanvas.width * 100}%`; markerArea.append(marker);
     }
+    markerArea.style.width = `${window.fireworkCanvas.getBoundingClientRect().width}px`;
   }
   const setMarkersVisible = (visible) => markerArea.classList.toggle("is-hidden", !visible);
   function renderParticles() {
@@ -96,7 +103,7 @@
     setMarkersVisible(true); setPhase(PHASE.IDLE);
   }
   function animateFade(startedAt, previousAt) {
-    const now = performance.now(); const progress = Math.min((now - startedAt) / TIMING.fade, 1);
+    const now = performance.now(); const progress = Math.min((now - startedAt) / activeTiming.fade, 1);
     updateScatter(now - previousAt);
     for (const particle of state.particles) particle.alpha = particle.baseAlpha * (1 - progress);
     renderParticles();
@@ -104,18 +111,18 @@
     finishSequence(false);
   }
   function animateScatter(startedAt, previousAt, origin) {
-    const now = performance.now(); const progress = Math.min((now - startedAt) / TIMING.scatter, 1);
+    const now = performance.now(); const progress = Math.min((now - startedAt) / activeTiming.scatter, 1);
     updateScatter(now - previousAt); renderParticles();
     if (progress < 1) { particleFrameId = requestAnimationFrame(() => animateScatter(startedAt, now, origin)); return; }
     setPhase(PHASE.FADE); particleFrameId = requestAnimationFrame(() => animateFade(performance.now(), performance.now()));
   }
   function animateHold(startedAt, origin) {
     renderParticles();
-    if (performance.now() - startedAt < TIMING.hold) { particleFrameId = requestAnimationFrame(() => animateHold(startedAt, origin)); return; }
+    if (performance.now() - startedAt < activeTiming.hold) { particleFrameId = requestAnimationFrame(() => animateHold(startedAt, origin)); return; }
     setPhase(PHASE.SCATTER); prepareScatterParticles(origin); particleFrameId = requestAnimationFrame(() => animateScatter(performance.now(), performance.now(), origin));
   }
   function animateFormation(startedAt, origin) {
-    const progress = Math.min((performance.now() - startedAt) / TIMING.formation, 1); const eased = easeOutQuart(progress);
+    const progress = Math.min((performance.now() - startedAt) / activeTiming.formation, 1); const eased = easeOutQuart(progress);
     for (const particle of state.particles) {
       particle.progress = progress; particle.currentX = particle.startX + (particle.targetX - particle.startX) * eased; particle.currentY = particle.startY + (particle.targetY - particle.startY) * eased; particle.x = particle.currentX; particle.y = particle.currentY;
     }
@@ -124,14 +131,14 @@
     setPhase(PHASE.HOLD); particleFrameId = requestAnimationFrame(() => animateHold(performance.now(), origin));
   }
   function animateBurst(startedAt, point) {
-    const progress = Math.min((performance.now() - startedAt) / TIMING.burst, 1); renderBurst(point, progress);
+    const progress = Math.min((performance.now() - startedAt) / activeTiming.burst, 1); renderBurst(point, progress);
     if (progress < 1) { sequenceFrameId = requestAnimationFrame(() => animateBurst(startedAt, point)); return; }
     sequenceFrameId = null; setPhase(PHASE.FORMATION); prepareFormationParticles(point); renderParticles(); particleFrameId = requestAnimationFrame(() => animateFormation(performance.now(), point));
   }
   function animateLaunch(startedAt, rockets, burstPoint) {
     let allArrived = true;
     for (const rocket of rockets) {
-      const local = Math.min(Math.max((performance.now() - startedAt - rocket.delay) / TIMING.launch, 0), 1);
+      const local = Math.min(Math.max((performance.now() - startedAt - rocket.delay) / activeTiming.launch, 0), 1);
       rocket.progress = easeInOutCubic(local); rocket.x = rocket.startX + (rocket.burstX - rocket.startX) * rocket.progress; rocket.y = rocket.startY + (rocket.burstY - rocket.startY) * rocket.progress;
       if (local < 1) allArrived = false;
     }
@@ -145,12 +152,14 @@
     if (!state.particles.length) return;
     if (state.playing) window.stopFireworkSequence();
     const burstPoint = getBurstPoint();
-    const rockets = getLaunchPoints(state.launchPointCount).map((point, index) => ({ startX: point.x, startY: point.y, x: point.x, y: point.y, burstX: burstPoint.x, burstY: burstPoint.y, progress: 0, delay: index * TIMING.rocketStagger }));
+    activeTiming = createScaledTiming(state.launchPointCount);
+    const rockets = getLaunchPoints(state.launchPointCount).map((point, index) => ({ startX: point.x, startY: point.y, x: point.x, y: point.y, burstX: burstPoint.x, burstY: burstPoint.y, progress: 0, delay: index * activeTiming.rocketStagger }));
     state.playing = true; setPhase(PHASE.LAUNCH); previewButton.disabled = true; setMarkersVisible(false); renderRockets(rockets); sequenceFrameId = requestAnimationFrame(() => animateLaunch(performance.now(), rockets, burstPoint));
   }
   document.querySelectorAll("[data-launch-count]").forEach((button) => button.addEventListener("click", () => { if (state.playing) return; state.launchPointCount = Number(button.dataset.launchCount); document.querySelectorAll("[data-launch-count]").forEach((item) => item.classList.toggle("is-selected", item === button)); renderLaunchMarkers(); }));
   previewButton.addEventListener("click", startFireworkSequence);
   window.startFormationAnimation = startFireworkSequence;
-  window.fireworkAnimationConfig = { TIMING, SCATTER, PHASE };
+  window.fireworkAnimationConfig = { TIMELINE, SCATTER, PHASE };
+  window.refreshLaunchMarkers = renderLaunchMarkers;
   renderLaunchMarkers();
 })();

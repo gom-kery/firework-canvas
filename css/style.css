@@ -7,3 +7,4 @@
 .launch-marker-area.is-hidden { visibility:hidden; }
 .palette-swatches { display:flex; gap:6px; min-height:18px; margin-top:9px; }.palette-swatch { width:18px; height:18px; border:1px solid rgba(255,255,255,.45); border-radius:50%; box-shadow:0 0 8px rgba(255,255,255,.16); }
 .picked-color { display:flex; align-items:center; gap:7px; margin-top:9px; color:var(--muted); font-size:.78rem; }.upload-preview img.is-picking { cursor:crosshair; }
+.canvas-stage { display:grid; place-items:center; }.canvas-stage #fireworkCanvas { width:auto; height:100%; max-width:100%; }.launch-marker-area { align-self:center; }
