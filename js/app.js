@@ -8,6 +8,7 @@ window.fireworkState = {
   particleMode: "normal",
   particleBuildMs: 0,
   formationProgress: 0,
+  launchPointCount: 1,
   playing: false,
   recording: false,
   previewReady: false

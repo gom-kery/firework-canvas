@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Unit 2.2 — Firework Launch & Burst
+
+- Launch Points 1~5 선택과 하단 균등 Marker 배치를 구현했습니다.
+- 각 Point에서 Rocket이 소폭의 시간차를 두고 출발해 공통 Burst Point로 이동합니다.
+- Rocket Head, 짧은 Trail, Burst Flash를 추가했습니다.
+- Burst 완료 후 기존 Formation Animation을 같은 Burst Point에서 시작하도록 연결했습니다.
+- 재생 중 Marker를 숨기고 종료·중단 후 다시 표시합니다.
+
 ### Unit 2.1 — Formation Animation
 
 - Preview 버튼을 Unit 2.1의 임시 Formation 실행 트리거로 연결했습니다.

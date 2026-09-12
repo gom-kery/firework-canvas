@@ -60,7 +60,7 @@
 
   function applyParticlePreset(mode, button) {
     const state = window.fireworkState;
-    if (state.playing && window.stopFormationAnimation) window.stopFormationAnimation();
+    if (state.playing && window.stopFireworkSequence) window.stopFireworkSequence();
     state.particleMode = mode;
     updatePresetSelection(button);
     if (!state.image) return;

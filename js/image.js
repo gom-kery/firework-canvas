@@ -24,7 +24,7 @@
     state.playing = false; state.recording = false; state.previewReady = false;
   }
   function showUploadedImage(image, objectUrl) {
-    if (state.playing && window.stopFormationAnimation) window.stopFormationAnimation();
+    if (state.playing && window.stopFireworkSequence) window.stopFireworkSequence();
     const startedAt = performance.now();
     const particles = window.createParticlesFromImage(image);
     if (state.imageObjectUrl) URL.revokeObjectURL(state.imageObjectUrl);
@@ -47,7 +47,7 @@
   }
   function chooseImage() { input.click(); }
   function deleteImage() {
-    if (state.playing && window.stopFormationAnimation) window.stopFormationAnimation();
+    if (state.playing && window.stopFireworkSequence) window.stopFireworkSequence();
     loadSequence += 1; resetImageState(); input.value = ""; preview.removeAttribute("src"); preview.hidden = true;
     placeholder.hidden = false; canvasLabel.hidden = false; changeButton.disabled = true; deleteButton.disabled = true; previewButton.disabled = true; clearError(); window.drawCanvasBackground();
   }
