@@ -15,21 +15,37 @@
 
   function showError(message) { errorMessage.textContent = message; errorMessage.hidden = false; }
   function clearError() { errorMessage.textContent = ""; errorMessage.hidden = true; }
-  function isAllowedImage(file) { return allowedTypes.has(file.type) || allowedExtensions.has(file.name.split(".").pop().toLowerCase()); }
+  function isAllowedImage(file) {
+    const extension = file.name.split(".").pop().toLowerCase();
+    return allowedTypes.has(file.type) || allowedExtensions.has(extension);
+  }
   function resetImageState() {
     if (state.imageObjectUrl) URL.revokeObjectURL(state.imageObjectUrl);
-    state.image = null; state.imageWidth = 0; state.imageHeight = 0; state.imageObjectUrl = null;
-    state.particles = []; state.pickedColor = null; state.particleBuildMs = 0;
-    state.playing = false; state.recording = false; state.previewReady = false;
+    state.image = null;
+    state.imageWidth = 0;
+    state.imageHeight = 0;
+    state.imageObjectUrl = null;
+    state.particles = [];
+    state.pickedColor = null;
+    state.playing = false;
+    state.recording = false;
+    state.previewReady = false;
   }
   function showUploadedImage(image, objectUrl) {
-    const startedAt = performance.now();
     const particles = window.createParticlesFromImage(image);
     if (state.imageObjectUrl) URL.revokeObjectURL(state.imageObjectUrl);
-    state.image = image; state.imageWidth = image.naturalWidth; state.imageHeight = image.naturalHeight; state.imageObjectUrl = objectUrl;
-    state.particles = particles; state.particleBuildMs = performance.now() - startedAt; state.previewReady = true;
-    preview.src = objectUrl; preview.hidden = false; placeholder.hidden = true; canvasLabel.hidden = true;
-    changeButton.disabled = false; deleteButton.disabled = false;
+    state.image = image;
+    state.imageWidth = image.naturalWidth;
+    state.imageHeight = image.naturalHeight;
+    state.imageObjectUrl = objectUrl;
+    state.particles = particles;
+    state.previewReady = true;
+    preview.src = objectUrl;
+    preview.hidden = false;
+    placeholder.hidden = true;
+    canvasLabel.hidden = true;
+    changeButton.disabled = false;
+    deleteButton.disabled = false;
     window.renderStaticParticles(state.particles);
   }
   function loadImage(file) {
@@ -38,17 +54,34 @@
     const requestId = ++loadSequence;
     const objectUrl = URL.createObjectURL(file);
     const image = new Image();
-    image.onload = () => { if (requestId !== loadSequence) { URL.revokeObjectURL(objectUrl); return; } clearError(); showUploadedImage(image, objectUrl); };
-    image.onerror = () => { URL.revokeObjectURL(objectUrl); if (requestId === loadSequence) showError("이미지를 불러올 수 없습니다."); };
+    image.onload = function () {
+      if (requestId !== loadSequence) { URL.revokeObjectURL(objectUrl); return; }
+      clearError();
+      showUploadedImage(image, objectUrl);
+    };
+    image.onerror = function () {
+      URL.revokeObjectURL(objectUrl);
+      if (requestId === loadSequence) showError("이미지를 불러올 수 없습니다.");
+    };
     image.src = objectUrl;
   }
   function chooseImage() { input.click(); }
   function deleteImage() {
-    loadSequence += 1; resetImageState(); input.value = ""; preview.removeAttribute("src"); preview.hidden = true;
-    placeholder.hidden = false; canvasLabel.hidden = false; changeButton.disabled = true; deleteButton.disabled = true; clearError(); window.drawCanvasBackground();
+    loadSequence += 1;
+    resetImageState();
+    input.value = "";
+    preview.removeAttribute("src");
+    preview.hidden = true;
+    placeholder.hidden = false;
+    canvasLabel.hidden = false;
+    changeButton.disabled = true;
+    deleteButton.disabled = true;
+    clearError();
+    window.drawCanvasBackground();
   }
+
   uploadButton.addEventListener("click", chooseImage);
   changeButton.addEventListener("click", chooseImage);
   deleteButton.addEventListener("click", deleteImage);
-  input.addEventListener("change", () => { const [file] = input.files; if (file) loadImage(file); input.value = ""; });
+  input.addEventListener("change", function () { const [file] = input.files; if (file) loadImage(file); input.value = ""; });
 })();

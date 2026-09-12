@@ -1,6 +1,6 @@
 (function setupParticleSampling() {
   const ALPHA_THRESHOLD = 32;
-  const PARTICLE_PRESETS = { low: 2000, normal: 5000, high: 9000 };
+  const MAX_PARTICLES = 7000;
   const CANVAS_PADDING = 56;
   const samplingCanvas = document.createElement("canvas");
   const samplingContext = samplingCanvas.getContext("2d", { willReadFrequently: true });
@@ -14,14 +14,14 @@
     return { width, height, x: Math.round((canvas.width - width) / 2), y: Math.round((canvas.height - height) / 2) };
   }
 
-  function getSamplingStep(width, height, particleLimit) {
-    return Math.max(2, Math.round(Math.sqrt((width * height) / particleLimit)));
+  function getSamplingStep(width, height) {
+    return Math.max(3, Math.ceil(Math.sqrt((width * height) / MAX_PARTICLES)));
   }
 
-  window.createParticlesFromImage = function createParticlesFromImage(image, mode = window.fireworkState.particleMode) {
+  window.createParticlesFromImage = function createParticlesFromImage(image) {
     const canvas = window.fireworkCanvas;
     const bounds = getFittedBounds(image, canvas);
-    const step = getSamplingStep(bounds.width, bounds.height, PARTICLE_PRESETS[mode]);
+    const step = getSamplingStep(bounds.width, bounds.height);
     samplingCanvas.width = bounds.width;
     samplingCanvas.height = bounds.height;
     samplingContext.clearRect(0, 0, bounds.width, bounds.height);
@@ -54,23 +54,5 @@
     context.restore();
   };
 
-  function updatePresetSelection(activeButton) {
-    document.querySelectorAll("[data-particle-mode]").forEach((button) => button.classList.toggle("is-selected", button === activeButton));
-  }
-
-  function applyParticlePreset(mode, button) {
-    const state = window.fireworkState;
-    state.particleMode = mode;
-    updatePresetSelection(button);
-    if (!state.image) return;
-    const startedAt = performance.now();
-    state.particles = window.createParticlesFromImage(state.image, mode);
-    state.particleBuildMs = performance.now() - startedAt;
-    window.renderStaticParticles(state.particles);
-  }
-
-  document.querySelectorAll("[data-particle-mode]").forEach((button) => {
-    button.addEventListener("click", () => applyParticlePreset(button.dataset.particleMode, button));
-  });
-  window.particleSamplingConfig = { ALPHA_THRESHOLD, PARTICLE_PRESETS, CANVAS_PADDING };
+  window.particleSamplingConfig = { ALPHA_THRESHOLD, MAX_PARTICLES, CANVAS_PADDING };
 })();

@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Unit 1.2 — Particle Quality
+
+- Low(약 2,000), Normal(약 5,000), High(약 9,000) Particle 상한 프리셋을 추가했습니다.
+- 프리셋별 Sampling step을 이미지 처리 영역과 Particle 상한값으로 계산합니다.
+- 프리셋 변경 시 기존 이미지를 유지하고 Particle을 재생성해 정적 렌더링을 즉시 갱신합니다.
+- Particle 생성 시간을 상태에 기록해 이후 성능 확인에 활용할 수 있도록 했습니다.
+
 ### Unit 1.1 — Particle Sampling
 
 - 오프스크린 Canvas에서 이미지 Pixel 데이터를 읽어 Particle Array로 변환했습니다.

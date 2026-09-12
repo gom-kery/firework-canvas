@@ -6,5 +6,6 @@
 | --- | --- | --- |
 | 0.1 — Project Setup | 완료 | 기본 UI Shell |
 | 0.2 — Image Upload | 완료 | Upload, Preview, Change, Delete |
-| 1.1 — Particle Sampling | 검증 대기 | Alpha Threshold 기반 Pixel Sampling 및 정적 Particle 렌더링 구현 완료. Checkpoint A 시각 검증 필요 |
-| 1.2 — Particle Quality | 대기 | 진행하지 않음 |
+| 1.1 — Particle Sampling | 완료 | Checkpoint A 통과 |
+| 1.2 — Particle Quality | 검증 대기 | Low / Normal / High Sampling Preset 연결 완료. 반복 변경 및 High 시각 성능 확인 필요 |
+| 2.1 — Formation Animation | 대기 | 진행하지 않음 |
