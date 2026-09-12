@@ -2,16 +2,16 @@
 
 ## Unreleased
 
+### Unit 6.2 — Error / Performance Test
+
+- Recording 안전 구간 중 설정 변경으로 마지막 영상 프레임이 달라질 수 있는 경로를 차단했습니다.
+- MediaRecorder 오류 발생 시 Recorder와 Stream 정리 흐름으로 연결했습니다.
+
 ### Unit 6.1 — Responsive UI
 
 - Tablet과 Mobile에서 Canvas, Preview/Save, 설정 패널 순으로 단일 Column을 구성했습니다.
 - Canvas 표시 크기를 내부 해상도와 분리해 모든 지원 Ratio가 화면 폭 안에서 비율을 유지하도록 했습니다.
 - Mobile Control의 최소 높이, Preview 높이, 여백 및 Typography를 조정했습니다.
-
-### Unit 6.2 — Error / Performance Test
-
-- Recording 안전 구간 중 설정 변경으로 마지막 영상 프레임이 달라질 수 있는 경로를 차단했습니다.
-- MediaRecorder 오류 발생 시 Recorder와 Stream 정리 흐름으로 연결했습니다.
 
 ### Unit 5.2 — Video Download
 
