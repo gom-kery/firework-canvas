@@ -4,6 +4,7 @@
   const PHASE = { IDLE: "IDLE", LAUNCH: "LAUNCH", BURST: "BURST", FORMATION: "FORMATION", HOLD: "HOLD", SCATTER: "SCATTER", FADE: "FADE", COMPLETE: "COMPLETE" };
   let sequenceFrameId = null;
   let particleFrameId = null;
+  let playbackCallbacks = null;
   let activeTiming = TIMELINE;
   const state = window.fireworkState;
   const previewButton = document.getElementById("previewButton");
@@ -100,10 +101,16 @@
     }
   }
   function finishSequence(showStatic, message = "") {
+    const callbacks = playbackCallbacks;
+    playbackCallbacks = null;
     state.playing = false; state.formationProgress = 0; sequenceFrameId = null; particleFrameId = null; previewButton.disabled = false;
     setPhase(PHASE.COMPLETE);
     if (showStatic) { restoreParticleTargets(); window.renderStaticParticles(state.particles); } else window.drawCanvasBackground();
     setMarkersVisible(true); setPhase(PHASE.IDLE); setPreviewStatus(message);
+    if (callbacks) {
+      if (showStatic) callbacks.onInterrupted?.();
+      else callbacks.onComplete?.();
+    }
   }
   function animateFade(startedAt, previousAt) {
     const now = performance.now(); const progress = Math.min((now - startedAt) / activeTiming.fade, 1);
@@ -160,14 +167,16 @@
     if (wasPlaying) finishSequence(true);
   };
   window.stopFormationAnimation = window.stopFireworkSequence;
-  function startFireworkSequence() {
+  function startFireworkSequence(callbacks = null) {
     if (!state.image || !state.particles.length) { setPreviewStatus("먼저 이미지를 업로드해주세요."); return; }
     if (state.playing) return;
     cancelPlaybackFrames(); restoreParticleTargets(); setPreviewStatus("");
     const burstPoint = getBurstPoint();
     activeTiming = createScaledTiming(state.launchPointCount);
     const rockets = getLaunchPoints(state.launchPointCount).map((point, index) => ({ startX: point.x, startY: point.y, x: point.x, y: point.y, burstX: burstPoint.x, burstY: burstPoint.y, progress: 0, delay: index * activeTiming.rocketStagger }));
+    playbackCallbacks = callbacks;
     state.playing = true; setPhase(PHASE.LAUNCH); previewButton.disabled = true; setMarkersVisible(false); renderRockets(rockets); sequenceFrameId = requestAnimationFrame(() => animateLaunch(performance.now(), rockets, burstPoint));
+    return true;
   }
   document.querySelectorAll("[data-launch-count]").forEach((button) => button.addEventListener("click", () => { if (state.playing) return; state.launchPointCount = Number(button.dataset.launchCount); document.querySelectorAll("[data-launch-count]").forEach((item) => item.classList.toggle("is-selected", item === button)); renderLaunchMarkers(); }));
   previewButton.addEventListener("click", startFireworkSequence);

@@ -50,7 +50,7 @@
   function resetImageState() {
     if (state.imageObjectUrl) URL.revokeObjectURL(state.imageObjectUrl);
     state.image = null; state.imageWidth = 0; state.imageHeight = 0; state.imageObjectUrl = null; state.particles = [];
-    state.compositionBounds = null;
+    state.compositionBounds = null; state.recordedBlob = null;
     state.pickedColor = null; state.palette = []; state.particleBuildMs = 0; state.playing = false; state.recording = false; state.previewReady = false;
     state.framing = { shape: "rect", zoom: 1, offsetX: 0, offsetY: 0 }; zoomRange.value = "1";
     const swatches = document.getElementById("paletteSwatches"); swatches.replaceChildren(); swatches.hidden = true;
@@ -78,8 +78,9 @@
     image.onerror = () => { URL.revokeObjectURL(objectUrl); if (requestId === loadSequence) showError("이미지를 불러올 수 없습니다."); };
     image.src = objectUrl;
   }
-  function chooseImage() { input.click(); }
+  function chooseImage() { if (state.recording) { if (window.setPreviewStatus) window.setPreviewStatus("영상 기록이 끝난 뒤 이미지를 변경할 수 있습니다."); return; } input.click(); }
   function deleteImage() {
+    if (state.recording) { if (window.setPreviewStatus) window.setPreviewStatus("영상 기록이 끝난 뒤 이미지를 삭제할 수 있습니다."); return; }
     if (state.playing && window.stopFireworkSequence) window.stopFireworkSequence();
     loadSequence += 1; resetImageState(); input.value = ""; previewStage.hidden = true; framingControls.hidden = true; if (window.setFireworkCompositionControlsVisible) window.setFireworkCompositionControlsVisible(false); canvasLabel.hidden = false;
     deleteButton.disabled = true; previewButton.disabled = false; if (window.setPreviewStatus) window.setPreviewStatus(""); updateImageAction(); clearError(); window.drawCanvasBackground();
