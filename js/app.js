@@ -26,6 +26,19 @@ window.fireworkState = {
 
 window.fireworkCanvas = document.getElementById("fireworkCanvas");
 window.fireworkContext = window.fireworkCanvas.getContext("2d");
+const canvasStage = window.fireworkCanvas.closest(".canvas-stage");
+window.fitFireworkCanvasDisplay = function fitFireworkCanvasDisplay() {
+  const canvas = window.fireworkCanvas;
+  const stageWidth = canvasStage.clientWidth;
+  const stageHeight = canvasStage.clientHeight;
+  if (!stageWidth || !stageHeight) return;
+  const scale = Math.min(stageWidth / canvas.width, stageHeight / canvas.height);
+  canvas.style.width = `${Math.floor(canvas.width * scale)}px`;
+  canvas.style.height = `${Math.floor(canvas.height * scale)}px`;
+  if (window.refreshLaunchMarkers) window.refreshLaunchMarkers();
+};
+if (window.ResizeObserver) new ResizeObserver(() => window.fitFireworkCanvasDisplay()).observe(canvasStage);
+else window.addEventListener("resize", window.fitFireworkCanvasDisplay);
 window.drawCanvasBackground = function drawCanvasBackground() {
   const { fireworkCanvas: canvas, fireworkContext: context } = window;
   const background = window.fireworkState.background;
@@ -131,6 +144,7 @@ window.setCanvasRatio = function setCanvasRatio(ratio, button) {
   window.fireworkCanvas.width = size.width;
   window.fireworkCanvas.height = size.height;
   window.fireworkContext = window.fireworkCanvas.getContext("2d");
+  window.fitFireworkCanvasDisplay();
   updateOptionSelection("[data-ratio]", button);
   rebuildParticlesForCanvas();
   if (window.refreshLaunchMarkers) window.refreshLaunchMarkers();
@@ -146,3 +160,4 @@ document.querySelectorAll("[data-duration]").forEach((button) => {
 document.querySelectorAll("[data-ratio]").forEach((button) => {
   button.addEventListener("click", () => window.setCanvasRatio(button.dataset.ratio, button));
 });
+window.requestAnimationFrame(window.fitFireworkCanvasDisplay);

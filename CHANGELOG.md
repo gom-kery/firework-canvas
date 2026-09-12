@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Unit 6.1 — Responsive UI
+
+- Tablet과 Mobile에서 Canvas, Preview/Save, 설정 패널 순으로 단일 Column을 구성했습니다.
+- Canvas 표시 크기를 내부 해상도와 분리해 모든 지원 Ratio가 화면 폭 안에서 비율을 유지하도록 했습니다.
+- Mobile Control의 최소 높이, Preview 높이, 여백 및 Typography를 조정했습니다.
+
 ### Unit 5.2 — Video Download
 
 - WebM Blob을 날짜·시간 기반 파일명으로 즉시 다운로드합니다.

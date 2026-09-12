@@ -15,9 +15,10 @@
 | 3.2 — Color Picker | 완료 | Preview 좌표 변환, Pixel Pick, 강조색 Blend 검증 완료 |
 | 4.1 — Duration & Ratio | 완료 | Timeline Scale 및 1:1 / 9:16 Canvas 재계산 검증 완료 |
 | 4.2 — Preview Controller | 완료 | 반복 재생·상태 안내·Reset 구현 |
-| 5.1 — WebM Recording | 검증 대기 | Canvas Capture 및 WebM Blob 기록 구현 |
+| 5.1 — WebM Recording | 완료 | Canvas Capture 및 WebM Blob 기록 구현 |
 | 5.1A — Background Selection | 완료 | Default, Solid Color, Image Background |
 | 5.2 — Video Download | 완료 | WebM Object URL 및 브라우저 다운로드 구현 |
+| 6.1 — Responsive UI | 검증 대기 | Desktop, Tablet, Mobile Layout 개선 |
 
 ## Planned refinements
 
