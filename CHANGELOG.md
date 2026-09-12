@@ -4,7 +4,8 @@
 
 ### Unit 0.1 — Project Setup
 
-- Canvas 중심의 기본 화면과 설정 UI를 구성했습니다.
-- Vanilla JavaScript 모듈 파일의 초기 구조를 만들었습니다.
-- 기본 상태 객체와 캔버스 배경 렌더링을 추가했습니다.
-- 이미지 업로드, 입자 변환, 애니메이션, 저장 기능은 이후 Unit에서 구현합니다.
+- Desktop용 좌·우 작업 레이아웃과 Convert Firework Canvas UI Shell을 구성했습니다.
+- Upload Image 미리보기 영역, Change / Delete 버튼, Color, Particles, Duration, Ratio, Launch Points UI를 추가했습니다.
+- Convert Firework Canvas 하단의 Launch Point Marker 영역을 1개 기본값으로 준비했습니다.
+- Preview 및 Save Video 버튼을 포함했습니다.
+- 모든 버튼은 이번 Unit 범위에 따라 동작 로직 없이 UI만 제공합니다.

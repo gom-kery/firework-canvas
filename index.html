@@ -3,82 +3,37 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="이미지를 불꽃 입자 애니메이션으로 만드는 Firework Canvas" />
+    <meta name="description" content="Firework Canvas UI Shell" />
     <title>Firework Canvas</title>
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
     <main class="app-shell">
-      <header class="app-header">
-        <p class="eyebrow">IMAGE TO FIREWORK</p>
-        <h1>Firework Canvas</h1>
-        <p class="intro">이미지 한 장을 밤하늘의 불꽃으로 바꿔보세요.</p>
-      </header>
-
-      <section class="canvas-panel" aria-label="불꽃 캔버스">
-        <canvas id="fireworkCanvas" width="720" height="720" aria-label="불꽃 미리보기 캔버스"></canvas>
-        <div class="canvas-placeholder" id="canvasPlaceholder" aria-hidden="true">
-          <span class="placeholder-star">✦</span>
-          <p>이미지를 올리면 이곳에서 불꽃이 시작됩니다.</p>
-        </div>
+      <header class="app-header"><p class="eyebrow">IMAGE TO FIREWORK</p><h1>Firework Canvas</h1></header>
+      <section class="workspace" aria-label="Firework Canvas 작업 영역">
+        <section class="convert-panel" aria-labelledby="convert-title">
+          <div class="canvas-stage">
+            <canvas id="fireworkCanvas" width="900" height="700" aria-label="Convert Firework Canvas"></canvas>
+            <div class="canvas-label"><span>✦</span><h2 id="convert-title">Convert Firework Canvas</h2><p>불꽃 애니메이션이 이곳에서 만들어집니다.</p></div>
+          </div>
+          <div class="launch-marker-area" aria-label="Launch Point Marker 영역"><span class="marker-line" aria-hidden="true"></span><span class="launch-marker" aria-label="Launch Point Marker 1"></span></div>
+        </section>
+        <aside class="settings-panel" aria-label="Firework 설정">
+          <section class="upload-preview" aria-labelledby="upload-title">
+            <div class="upload-placeholder"><span class="upload-icon">↑</span><h2 id="upload-title">Upload Image</h2><p>이미지 미리보기 영역</p></div>
+            <div class="upload-actions"><button type="button" class="button button-secondary">Change</button><button type="button" class="button button-secondary">Delete</button></div>
+          </section>
+          <fieldset class="control-group"><legend>Color</legend><div class="option-row"><button type="button" class="option-button is-selected">Original</button><button type="button" class="option-button">Palette</button><button type="button" class="option-button">Pick</button></div></fieldset>
+          <fieldset class="control-group"><legend>Particles</legend><div class="option-row"><button type="button" class="option-button">Low</button><button type="button" class="option-button is-selected">Normal</button><button type="button" class="option-button">High</button></div></fieldset>
+          <div class="paired-controls">
+            <fieldset class="control-group"><legend>Duration</legend><div class="option-row"><button type="button" class="option-button">3s</button><button type="button" class="option-button is-selected">5s</button></div></fieldset>
+            <fieldset class="control-group"><legend>Ratio</legend><div class="option-row"><button type="button" class="option-button is-selected">1:1</button><button type="button" class="option-button">9:16</button></div></fieldset>
+          </div>
+          <fieldset class="control-group"><legend>Launch Points</legend><div class="option-row launch-options" aria-label="Launch Point 개수"><button type="button" class="option-button is-selected">1</button><button type="button" class="option-button">2</button><button type="button" class="option-button">3</button><button type="button" class="option-button">4</button><button type="button" class="option-button">5</button></div></fieldset>
+        </aside>
       </section>
-
-      <section class="controls" aria-label="불꽃 설정">
-        <div class="control-group image-control">
-          <div>
-            <h2>Image</h2>
-            <p id="imageStatus">아직 선택한 이미지가 없습니다.</p>
-          </div>
-          <button type="button" class="button button-primary" id="uploadButton">Upload</button>
-          <input id="imageInput" type="file" accept="image/jpeg,image/png,image/webp" hidden />
-        </div>
-
-        <fieldset class="control-group">
-          <legend>Color</legend>
-          <div class="button-row" role="group" aria-label="색상 모드">
-            <button type="button" class="option-button is-selected" data-setting="color" data-value="original">Original</button>
-            <button type="button" class="option-button" data-setting="color" data-value="palette">Palette</button>
-            <button type="button" class="option-button" data-setting="color" data-value="pick">Pick</button>
-          </div>
-        </fieldset>
-
-        <fieldset class="control-group">
-          <legend>Particles</legend>
-          <div class="button-row" role="group" aria-label="입자 수">
-            <button type="button" class="option-button" data-setting="particles" data-value="low">Low</button>
-            <button type="button" class="option-button is-selected" data-setting="particles" data-value="normal">Normal</button>
-            <button type="button" class="option-button" data-setting="particles" data-value="high">High</button>
-          </div>
-        </fieldset>
-
-        <div class="settings-grid">
-          <fieldset class="control-group">
-            <legend>Duration</legend>
-            <div class="button-row" role="group" aria-label="재생 시간">
-              <button type="button" class="option-button" data-setting="duration" data-value="3">3s</button>
-              <button type="button" class="option-button is-selected" data-setting="duration" data-value="5">5s</button>
-            </div>
-          </fieldset>
-          <fieldset class="control-group">
-            <legend>Ratio</legend>
-            <div class="button-row" role="group" aria-label="캔버스 비율">
-              <button type="button" class="option-button is-selected" data-setting="ratio" data-value="1:1">1:1</button>
-              <button type="button" class="option-button" data-setting="ratio" data-value="9:16">9:16</button>
-            </div>
-          </fieldset>
-        </div>
-
-        <div class="action-row">
-          <button type="button" class="button button-preview" id="previewButton" disabled>▶ Preview</button>
-          <button type="button" class="button button-save" id="saveButton" disabled>↓ Save WebM</button>
-        </div>
-      </section>
+      <div class="main-actions"><button type="button" class="button button-preview">▶ Preview</button><button type="button" class="button button-save">↓ Save Video</button></div>
     </main>
-
-    <script src="js/image.js"></script>
-    <script src="js/particles.js"></script>
-    <script src="js/fireworks.js"></script>
-    <script src="js/exporter.js"></script>
     <script src="js/app.js"></script>
   </body>
 </html>
