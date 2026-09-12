@@ -11,5 +11,6 @@
 | 2.1 — Formation Animation | 완료 | 중앙 Burst 시작점 기반 Formation Animation 및 반복 재생 확인 |
 | 2.2 — Firework Launch & Burst | 완료 | 1~5 Launch Point, Rocket, 공통 Burst, Formation 연결 검증 완료 |
 | 2.3 — Scatter & Fade | 완료 | Hold, 방향성 Scatter, Gravity, Friction, Fade 검증 완료 |
-| 3.1 — Original / Palette | 검증 대기 | Original RGB 및 Quantization Palette 색상 모드 구현 완료 |
-| 3.2 — Color Picker | 대기 | 진행하지 않음 |
+| 3.1 — Original / Palette | 완료 | Original RGB 및 Quantization Palette 색상 모드 검증 완료 |
+| 3.2 — Color Picker | 검증 대기 | Preview 좌표 변환, Pixel Pick, 강조색 Blend 구현 완료 |
+| 4.1 — Duration & Ratio | 대기 | 진행하지 않음 |

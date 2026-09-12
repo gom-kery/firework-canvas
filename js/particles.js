@@ -8,6 +8,9 @@
   const samplingContext = samplingCanvas.getContext("2d", { willReadFrequently: true });
   const state = window.fireworkState;
   const swatches = document.getElementById("paletteSwatches");
+  const pickedDisplay = document.getElementById("pickedColorDisplay");
+  const pickedSwatch = document.getElementById("pickedColorSwatch");
+  const pickedValue = document.getElementById("pickedColorValue");
 
   const toCssColor = (color) => `rgb(${color.r}, ${color.g}, ${color.b})`;
   const getFittedBounds = (image, canvas) => {
@@ -71,19 +74,44 @@
     }
     swatches.hidden = false;
   }
+  function renderPickedColor() {
+    if (state.colorMode !== "pick" || !state.pickedColor) { pickedDisplay.hidden = true; return; }
+    const cssColor = toCssColor(state.pickedColor);
+    pickedSwatch.style.backgroundColor = cssColor;
+    pickedValue.textContent = `#${state.pickedColor.r.toString(16).padStart(2, "0")}${state.pickedColor.g.toString(16).padStart(2, "0")}${state.pickedColor.b.toString(16).padStart(2, "0")}`.toUpperCase();
+    pickedDisplay.hidden = false;
+  }
+  function blendWithPickedColor(color) {
+    const picked = state.pickedColor;
+    const blend = .45;
+    return { r: Math.round(color.r * (1 - blend) + picked.r * blend), g: Math.round(color.g * (1 - blend) + picked.g * blend), b: Math.round(color.b * (1 - blend) + picked.b * blend) };
+  }
   function updateColorSelection(activeButton) { document.querySelectorAll("[data-color-mode]").forEach((button) => button.classList.toggle("is-selected", button === activeButton)); }
   window.applyColorMode = function applyColorMode(mode, activeButton) {
-    if (!state.particles.length) { state.colorMode = mode; if (activeButton) updateColorSelection(activeButton); return; }
+    if (!state.particles.length) { state.colorMode = mode; if (activeButton) updateColorSelection(activeButton); if (window.updatePickPreviewState) window.updatePickPreviewState(); return; }
     state.colorMode = mode;
     if (mode === "palette") {
       if (!state.palette.length) state.palette = extractPalette(state.particles);
       for (const particle of state.particles) particle.paint = toCssColor(findClosestPaletteColor(particle.color, state.palette));
+    } else if (mode === "pick" && state.pickedColor) {
+      for (const particle of state.particles) particle.paint = toCssColor(blendWithPickedColor(particle.color));
     } else {
       for (const particle of state.particles) particle.paint = toCssColor(particle.color);
     }
     if (activeButton) updateColorSelection(activeButton);
     renderPaletteSwatches();
+    renderPickedColor();
+    if (window.updatePickPreviewState) window.updatePickPreviewState();
     window.renderStaticParticles(state.particles);
+  };
+  window.applyPickedColor = function applyPickedColor(color) {
+    state.pickedColor = color;
+    if (state.colorMode === "pick") window.applyColorMode("pick");
+  };
+  window.resetColorMode = function resetColorMode() {
+    state.colorMode = "original"; state.pickedColor = null; state.palette = [];
+    document.querySelectorAll("[data-color-mode]").forEach((button) => button.classList.toggle("is-selected", button.dataset.colorMode === "original"));
+    renderPaletteSwatches(); renderPickedColor(); if (window.updatePickPreviewState) window.updatePickPreviewState();
   };
   window.renderStaticParticles = function renderStaticParticles(particles) {
     const context = window.fireworkContext;

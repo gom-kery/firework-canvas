@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Unit 3.2 — Color Picker
+
+- Pick Mode에서 Preview의 실제 이미지 영역만 클릭 가능하도록 좌표를 원본 이미지 좌표로 변환했습니다.
+- 1×1 내부 Canvas로 선택 위치의 Pixel RGB를 읽고 Color Swatch와 HEX를 표시합니다.
+- Pick 색상은 Original RGB와 45% 블렌딩해 이미지 형태를 보존하며 강조색을 적용합니다.
+- 이미지 Change / Delete 시 Pick 상태와 색상 UI를 Original 기본 상태로 초기화합니다.
+
 ### Unit 3.1 — Original / Palette
 
 - Particle이 Original RGB 객체를 원본 색상 데이터로 유지하도록 정리했습니다.
