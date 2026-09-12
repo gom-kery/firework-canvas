@@ -147,7 +147,7 @@
     context.restore();
   };
   function applyParticlePreset(mode, button) {
-    if (state.playing && window.stopFireworkSequence) window.stopFireworkSequence();
+    if (state.playing || state.recording) return;
     state.particleMode = mode;
     document.querySelectorAll("[data-particle-mode]").forEach((item) => item.classList.toggle("is-selected", item === button));
     if (!state.image) return;
@@ -155,6 +155,6 @@
     state.palette = []; window.applyColorMode(state.colorMode);
   }
   document.querySelectorAll("[data-particle-mode]").forEach((button) => button.addEventListener("click", () => applyParticlePreset(button.dataset.particleMode, button)));
-  document.querySelectorAll("[data-color-mode]").forEach((button) => button.addEventListener("click", () => { if (state.playing) return; window.applyColorMode(button.dataset.colorMode, button); }));
+  document.querySelectorAll("[data-color-mode]").forEach((button) => button.addEventListener("click", () => { if (state.playing || state.recording) return; window.applyColorMode(button.dataset.colorMode, button); }));
   window.particleSamplingConfig = { ALPHA_THRESHOLD, PARTICLE_PRESETS, PALETTE_SIZE, QUANTIZATION_STEP };
 })();

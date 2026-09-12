@@ -92,7 +92,7 @@ function rebuildParticlesForCanvas() {
   function updateScaleValue() { scaleValue.value = `${Math.round(state.composition.scale * 100)}%`; scaleValue.textContent = scaleValue.value; }
   function renderComposition() {
     pendingRender = null;
-    if (!state.image || state.playing) return;
+    if (!state.image || state.playing || state.recording) return;
     rebuildParticlesForCanvas();
   }
   function requestCompositionRender() {
@@ -110,12 +110,12 @@ function rebuildParticlesForCanvas() {
     return bounds ? { x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2 } : { x: canvas.width / 2, y: canvas.height * .48 };
   };
   scaleInput.addEventListener("input", () => {
-    if (!state.image || state.playing) return;
+    if (!state.image || state.playing || state.recording) return;
     state.composition.scale = Number(scaleInput.value); updateScaleValue(); requestCompositionRender();
   });
-  resetButton.addEventListener("click", () => { if (!state.image || state.playing) return; resetComposition(); requestCompositionRender(); });
+  resetButton.addEventListener("click", () => { if (!state.image || state.playing || state.recording) return; resetComposition(); requestCompositionRender(); });
   canvas.addEventListener("pointerdown", (event) => {
-    if (!state.image || state.playing || !state.compositionBounds) return;
+    if (!state.image || state.playing || state.recording || !state.compositionBounds) return;
     const bounds = state.compositionBounds;
     const horizontalRange = Math.max((canvas.width - bounds.width) / 2, 1);
     const verticalRange = Math.max((canvas.height - bounds.height) / 2, 1);
@@ -138,7 +138,7 @@ function rebuildParticlesForCanvas() {
 
 window.setCanvasRatio = function setCanvasRatio(ratio, button) {
   const state = window.fireworkState;
-  if (state.playing || !CANVAS_PREVIEW_SIZES[ratio]) return;
+  if (state.playing || state.recording || !CANVAS_PREVIEW_SIZES[ratio]) return;
   const size = CANVAS_PREVIEW_SIZES[ratio];
   state.ratio = ratio;
   window.fireworkCanvas.width = size.width;
@@ -152,7 +152,7 @@ window.setCanvasRatio = function setCanvasRatio(ratio, button) {
 
 document.querySelectorAll("[data-duration]").forEach((button) => {
   button.addEventListener("click", () => {
-    if (window.fireworkState.playing) return;
+    if (window.fireworkState.playing || window.fireworkState.recording) return;
     window.fireworkState.duration = Number(button.dataset.duration);
     updateOptionSelection("[data-duration]", button);
   });

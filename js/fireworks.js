@@ -178,7 +178,7 @@
     state.playing = true; setPhase(PHASE.LAUNCH); previewButton.disabled = true; setMarkersVisible(false); renderRockets(rockets); sequenceFrameId = requestAnimationFrame(() => animateLaunch(performance.now(), rockets, burstPoint));
     return true;
   }
-  document.querySelectorAll("[data-launch-count]").forEach((button) => button.addEventListener("click", () => { if (state.playing) return; state.launchPointCount = Number(button.dataset.launchCount); document.querySelectorAll("[data-launch-count]").forEach((item) => item.classList.toggle("is-selected", item === button)); renderLaunchMarkers(); }));
+  document.querySelectorAll("[data-launch-count]").forEach((button) => button.addEventListener("click", () => { if (state.playing || state.recording) return; state.launchPointCount = Number(button.dataset.launchCount); document.querySelectorAll("[data-launch-count]").forEach((item) => item.classList.toggle("is-selected", item === button)); renderLaunchMarkers(); }));
   previewButton.addEventListener("click", startFireworkSequence);
   window.startFormationAnimation = startFireworkSequence;
   window.fireworkAnimationConfig = { TIMELINE, SCATTER, PHASE };

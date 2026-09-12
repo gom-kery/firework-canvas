@@ -91,7 +91,7 @@
     chunks = [];
     finalized = false;
     recorder.ondataavailable = (event) => { if (event.data.size > 0) chunks.push(event.data); };
-    recorder.onerror = () => { completionMessage = "영상 기록 중 오류가 발생했습니다."; if (recorder?.state === "inactive") finalizeRecording(); };
+    recorder.onerror = () => stopRecording("영상 기록 중 오류가 발생했습니다.");
     recorder.onstop = finalizeRecording;
     state.recording = true;
     setSaveButtonState(true);

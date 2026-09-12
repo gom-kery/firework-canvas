@@ -57,7 +57,7 @@
     if (window.resetColorMode) window.resetColorMode();
   }
   function rebuildFramedParticles() {
-    if (!state.image || state.playing) return;
+    if (!state.image || state.playing || state.recording) return;
     const startedAt = performance.now(); state.particles = window.createParticlesFromImage(state.image, state.particleMode); state.palette = [];
     state.particleBuildMs = performance.now() - startedAt; window.applyColorMode(state.colorMode); window.renderImageFramingPreview();
   }
@@ -98,13 +98,13 @@
     return { x: Math.min(state.imageWidth - 1, Math.floor(source.x + (canvasX - rect.x) / rect.width * source.width)), y: Math.min(state.imageHeight - 1, Math.floor(source.y + (canvasY - rect.y) / rect.height * source.height)) };
   }
   function pickColorAt(event) {
-    if (state.colorMode !== "pick" || !state.image) return;
+    if (state.colorMode !== "pick" || !state.image || state.recording) return;
     const point = sourcePointFromEvent(event); if (!point) return;
     pickContext.clearRect(0, 0, 1, 1); pickContext.drawImage(state.image, point.x, point.y, 1, 1, 0, 0, 1, 1);
     const [r, g, b, alpha] = pickContext.getImageData(0, 0, 1, 1).data; if (alpha >= 32) window.applyPickedColor({ r, g, b });
   }
   function clampOffset(value) { return Math.max(-1, Math.min(1, value)); }
-  function startDrag(event) { if (!state.image || state.colorMode === "pick") return; dragStart = { x: event.clientX, y: event.clientY, offsetX: state.framing.offsetX, offsetY: state.framing.offsetY }; previewCanvas.setPointerCapture(event.pointerId); }
+  function startDrag(event) { if (!state.image || state.colorMode === "pick" || state.recording) return; dragStart = { x: event.clientX, y: event.clientY, offsetX: state.framing.offsetX, offsetY: state.framing.offsetY }; previewCanvas.setPointerCapture(event.pointerId); }
   function dragImage(event) {
     if (!dragStart) return;
     const rect = previewCanvas.getBoundingClientRect();
@@ -113,8 +113,8 @@
     window.renderImageFramingPreview();
   }
   function endDrag() { if (!dragStart) return; dragStart = null; rebuildFramedParticles(); }
-  document.querySelectorAll("[data-crop-shape]").forEach((button) => button.addEventListener("click", () => { if (state.playing || !state.image) return; state.framing.shape = button.dataset.cropShape; document.querySelectorAll("[data-crop-shape]").forEach((item) => item.classList.toggle("is-selected", item === button)); rebuildFramedParticles(); }));
-  zoomRange.addEventListener("input", () => { if (state.playing || !state.image) return; state.framing.zoom = Number(zoomRange.value); rebuildFramedParticles(); });
+  document.querySelectorAll("[data-crop-shape]").forEach((button) => button.addEventListener("click", () => { if (state.playing || state.recording || !state.image) return; state.framing.shape = button.dataset.cropShape; document.querySelectorAll("[data-crop-shape]").forEach((item) => item.classList.toggle("is-selected", item === button)); rebuildFramedParticles(); }));
+  zoomRange.addEventListener("input", () => { if (state.playing || state.recording || !state.image) return; state.framing.zoom = Number(zoomRange.value); rebuildFramedParticles(); });
   uploadButton.addEventListener("click", chooseImage); deleteButton.addEventListener("click", deleteImage);
   input.addEventListener("change", () => { const [file] = input.files; if (file) loadImage(file); input.value = ""; });
   previewCanvas.addEventListener("click", pickColorAt); previewCanvas.addEventListener("pointerdown", startDrag); previewCanvas.addEventListener("pointermove", dragImage); previewCanvas.addEventListener("pointerup", endDrag); previewCanvas.addEventListener("pointercancel", endDrag);

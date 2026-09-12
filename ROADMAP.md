@@ -18,7 +18,8 @@
 | 5.1 — WebM Recording | 완료 | Canvas Capture 및 WebM Blob 기록 구현 |
 | 5.1A — Background Selection | 완료 | Default, Solid Color, Image Background |
 | 5.2 — Video Download | 완료 | WebM Object URL 및 브라우저 다운로드 구현 |
-| 6.1 — Responsive UI | 검증 대기 | Desktop, Tablet, Mobile Layout 개선 |
+| 6.1 — Responsive UI | 완료 | Desktop, Tablet, Mobile Layout 개선 |
+| 6.2 — Error / Performance Test | 검증 대기 | 통합 오류·반복 실행·성능 점검 |
 
 ## Planned refinements
 
