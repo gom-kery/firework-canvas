@@ -20,8 +20,10 @@
   function resetImageState() {
     if (state.imageObjectUrl) URL.revokeObjectURL(state.imageObjectUrl);
     state.image = null; state.imageWidth = 0; state.imageHeight = 0; state.imageObjectUrl = null;
-    state.particles = []; state.pickedColor = null; state.particleBuildMs = 0;
+    state.particles = []; state.pickedColor = null; state.palette = []; state.particleBuildMs = 0;
     state.playing = false; state.recording = false; state.previewReady = false;
+    const swatches = document.getElementById("paletteSwatches");
+    swatches.replaceChildren(); swatches.hidden = true;
   }
   function showUploadedImage(image, objectUrl) {
     if (state.playing && window.stopFireworkSequence) window.stopFireworkSequence();
@@ -29,11 +31,11 @@
     const particles = window.createParticlesFromImage(image);
     if (state.imageObjectUrl) URL.revokeObjectURL(state.imageObjectUrl);
     state.image = image; state.imageWidth = image.naturalWidth; state.imageHeight = image.naturalHeight; state.imageObjectUrl = objectUrl;
-    state.particles = particles; state.particleBuildMs = performance.now() - startedAt; state.previewReady = true;
+    state.particles = particles; state.palette = []; state.particleBuildMs = performance.now() - startedAt; state.previewReady = true;
     preview.src = objectUrl; preview.hidden = false; placeholder.hidden = true; canvasLabel.hidden = true;
     changeButton.disabled = false; deleteButton.disabled = false;
     previewButton.disabled = false;
-    window.renderStaticParticles(state.particles);
+    window.applyColorMode(state.colorMode);
   }
   function loadImage(file) {
     if (!isAllowedImage(file)) { showError("지원하지 않는 이미지 형식입니다."); return; }

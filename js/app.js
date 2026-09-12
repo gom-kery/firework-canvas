@@ -5,6 +5,8 @@ window.fireworkState = {
   imageObjectUrl: null,
   particles: [],
   pickedColor: null,
+  colorMode: "original",
+  palette: [],
   particleMode: "normal",
   particleBuildMs: 0,
   formationProgress: 0,

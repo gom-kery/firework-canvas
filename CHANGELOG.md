@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Unit 3.1 — Original / Palette
+
+- Particle이 Original RGB 객체를 원본 색상 데이터로 유지하도록 정리했습니다.
+- 32단계 RGB Quantization으로 최대 5개의 대표 Palette 색상을 추출합니다.
+- Palette Mode는 기존 Particle을 가장 가까운 대표색에 매핑하며 재샘플링하지 않습니다.
+- Original / Palette 버튼과 Palette Swatch 미리보기를 연결했습니다.
+
 ### Unit 2.3 — Scatter & Fade
 
 - Launch부터 Fade까지의 Animation Phase를 명시적으로 관리합니다.

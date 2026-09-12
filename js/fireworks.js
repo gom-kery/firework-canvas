@@ -26,7 +26,7 @@
     const context = window.fireworkContext;
     window.drawCanvasBackground(); context.save(); context.globalCompositeOperation = "lighter";
     for (const particle of state.particles) {
-      context.fillStyle = particle.color; context.globalAlpha = particle.alpha;
+      context.fillStyle = particle.paint; context.globalAlpha = particle.alpha;
       context.fillRect(particle.currentX, particle.currentY, 2, 2);
     }
     context.restore();
