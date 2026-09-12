@@ -9,6 +9,7 @@ window.fireworkState = {
   particleBuildMs: 0,
   formationProgress: 0,
   launchPointCount: 1,
+  phase: "IDLE",
   playing: false,
   recording: false,
   previewReady: false

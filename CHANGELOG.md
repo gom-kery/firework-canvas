@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Unit 2.3 — Scatter & Fade
+
+- Launch부터 Fade까지의 Animation Phase를 명시적으로 관리합니다.
+- Formation 뒤 700ms Hold를 추가했습니다.
+- Burst 중심을 기준으로 바깥 방향 Velocity를 계산해 Scatter를 구현했습니다.
+- Gravity, Friction, Randomness를 상수로 분리하고 Fade 중에도 Particle 이동을 유지합니다.
+- Fade 종료 시 Canvas를 비우고 Marker를 복원하며, 다음 실행에서는 Particle 상태를 초기화합니다.
+
 ### Unit 2.2 — Firework Launch & Burst
 
 - Launch Points 1~5 선택과 하단 균등 Marker 배치를 구현했습니다.

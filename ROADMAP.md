@@ -9,5 +9,5 @@
 | 1.1 — Particle Sampling | 완료 | Checkpoint A 통과 |
 | 1.2 — Particle Quality | 완료 | Preset 반복 변경 및 High 처리 확인 |
 | 2.1 — Formation Animation | 완료 | 중앙 Burst 시작점 기반 Formation Animation 및 반복 재생 확인 |
-| 2.2 — Firework Launch & Burst | 검증 대기 | 1~5 Launch Point, Rocket, 공통 Burst, Formation 연결 구현 완료 |
-| 2.3 — Scatter & Fade | 대기 | 진행하지 않음 |
+| 2.2 — Firework Launch & Burst | 완료 | 1~5 Launch Point, Rocket, 공통 Burst, Formation 연결 검증 완료 |
+| 2.3 — Scatter & Fade | 검증 대기 | Hold, 방향성 Scatter, Gravity, Friction, Fade를 Animation Cycle에 연결 |
