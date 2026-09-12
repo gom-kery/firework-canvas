@@ -31,6 +31,11 @@
 - 하나의 동작 버튼은 이미지가 없을 때 Upload, 이미지가 있을 때 Change로 표시합니다.
 - Delete와 편집 미리보기, Image Framing 컨트롤의 순서를 정리합니다.
 
+### Unit 4.1C — Firework Composition — 대기
+
+- Convert Canvas 안에서 최종 이미지 불꽃의 크기와 표시 위치를 조정하는 컨트롤을 추가합니다.
+- Composition 변경 시 Particle target, Burst 위치, Formation 및 Scatter의 기준점을 함께 다시 계산합니다.
+
 ### Unit 6.1 — Responsive UI additions
 
 - Upload 버튼을 Change / Delete Action 영역에 통합합니다. 이미지가 없을 때는 Upload, 이미지가 있으면 Change를 표시합니다.

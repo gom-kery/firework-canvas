@@ -18,6 +18,7 @@
   const pickContext = pickCanvas.getContext("2d", { willReadFrequently: true });
   let loadSequence = 0;
   let dragStart = null;
+  let previewDrawRect = null;
   pickCanvas.width = 1; pickCanvas.height = 1;
 
   function showError(message) { errorMessage.textContent = message; errorMessage.hidden = false; }
@@ -26,15 +27,24 @@
   function isAllowedImage(file) { return allowedTypes.has(file.type) || allowedExtensions.has(file.name.split(".").pop().toLowerCase()); }
   function drawCropOverlay() {
     if (state.framing.shape !== "circle") return;
-    const radius = Math.min(previewCanvas.width, previewCanvas.height) / 2;
-    previewContext.save(); previewContext.fillStyle = "rgba(4, 6, 16, .58)"; previewContext.beginPath(); previewContext.rect(0, 0, previewCanvas.width, previewCanvas.height); previewContext.arc(previewCanvas.width / 2, previewCanvas.height / 2, radius, 0, Math.PI * 2); previewContext.fill("evenodd");
-    previewContext.strokeStyle = "rgba(220, 207, 255, .9)"; previewContext.lineWidth = 2; previewContext.beginPath(); previewContext.arc(previewCanvas.width / 2, previewCanvas.height / 2, radius, 0, Math.PI * 2); previewContext.stroke(); previewContext.restore();
+    const rect = previewDrawRect;
+    if (!rect) return;
+    const radius = Math.min(rect.width, rect.height) / 2;
+    const centerX = rect.x + rect.width / 2;
+    const centerY = rect.y + rect.height / 2;
+    previewContext.save(); previewContext.fillStyle = "rgba(4, 6, 16, .58)"; previewContext.beginPath(); previewContext.rect(rect.x, rect.y, rect.width, rect.height); previewContext.arc(centerX, centerY, radius, 0, Math.PI * 2); previewContext.fill("evenodd");
+    previewContext.strokeStyle = "rgba(220, 207, 255, .9)"; previewContext.lineWidth = 2; previewContext.beginPath(); previewContext.arc(centerX, centerY, radius, 0, Math.PI * 2); previewContext.stroke(); previewContext.restore();
   }
   window.renderImageFramingPreview = function renderImageFramingPreview() {
     if (!state.image) return;
-    const source = window.getFramedSourceRect(state.image, previewCanvas.width, previewCanvas.height);
+    const source = window.getFramedSourceRect(state.image, window.fireworkCanvas.width, window.fireworkCanvas.height);
+    const scale = Math.min(previewCanvas.width / source.width, previewCanvas.height / source.height);
+    const width = Math.round(source.width * scale);
+    const height = Math.round(source.height * scale);
+    previewDrawRect = { x: Math.round((previewCanvas.width - width) / 2), y: Math.round((previewCanvas.height - height) / 2), width, height };
     previewContext.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
-    previewContext.drawImage(state.image, source.x, source.y, source.width, source.height, 0, 0, previewCanvas.width, previewCanvas.height);
+    previewContext.fillStyle = "#070a17"; previewContext.fillRect(0, 0, previewCanvas.width, previewCanvas.height);
+    previewContext.drawImage(state.image, source.x, source.y, source.width, source.height, previewDrawRect.x, previewDrawRect.y, previewDrawRect.width, previewDrawRect.height);
     drawCropOverlay();
   };
   function resetImageState() {
@@ -74,13 +84,15 @@
   }
   window.updatePickPreviewState = function updatePickPreviewState() { previewCanvas.classList.toggle("is-picking", state.colorMode === "pick" && Boolean(state.image)); };
   function sourcePointFromEvent(event) {
-    const rect = previewCanvas.getBoundingClientRect();
-    const canvasX = (event.clientX - rect.left) * previewCanvas.width / rect.width;
-    const canvasY = (event.clientY - rect.top) * previewCanvas.height / rect.height;
+    const canvasRect = previewCanvas.getBoundingClientRect();
+    const canvasX = (event.clientX - canvasRect.left) * previewCanvas.width / canvasRect.width;
+    const canvasY = (event.clientY - canvasRect.top) * previewCanvas.height / canvasRect.height;
     if (canvasX < 0 || canvasY < 0 || canvasX >= previewCanvas.width || canvasY >= previewCanvas.height) return null;
-    if (state.framing.shape === "circle") { const radius = Math.min(previewCanvas.width, previewCanvas.height) / 2; const dx = canvasX - previewCanvas.width / 2; const dy = canvasY - previewCanvas.height / 2; if (dx * dx + dy * dy > radius * radius) return null; }
-    const source = window.getFramedSourceRect(state.image, previewCanvas.width, previewCanvas.height);
-    return { x: Math.min(state.imageWidth - 1, Math.floor(source.x + canvasX / previewCanvas.width * source.width)), y: Math.min(state.imageHeight - 1, Math.floor(source.y + canvasY / previewCanvas.height * source.height)) };
+    const rect = previewDrawRect;
+    if (!rect || canvasX < rect.x || canvasY < rect.y || canvasX >= rect.x + rect.width || canvasY >= rect.y + rect.height) return null;
+    if (state.framing.shape === "circle") { const radius = Math.min(rect.width, rect.height) / 2; const dx = canvasX - (rect.x + rect.width / 2); const dy = canvasY - (rect.y + rect.height / 2); if (dx * dx + dy * dy > radius * radius) return null; }
+    const source = window.getFramedSourceRect(state.image, window.fireworkCanvas.width, window.fireworkCanvas.height);
+    return { x: Math.min(state.imageWidth - 1, Math.floor(source.x + (canvasX - rect.x) / rect.width * source.width)), y: Math.min(state.imageHeight - 1, Math.floor(source.y + (canvasY - rect.y) / rect.height * source.height)) };
   }
   function pickColorAt(event) {
     if (state.colorMode !== "pick" || !state.image) return;

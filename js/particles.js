@@ -13,18 +13,18 @@
   const pickedValue = document.getElementById("pickedColorValue");
 
   const toCssColor = (color) => `rgb(${color.r}, ${color.g}, ${color.b})`;
-  const getFittedBounds = (image, canvas) => {
+  const getFittedBounds = (source, canvas) => {
     const availableWidth = canvas.width - CANVAS_PADDING * 2;
     const availableHeight = canvas.height - CANVAS_PADDING * 2;
-    const scale = Math.min(availableWidth / image.naturalWidth, availableHeight / image.naturalHeight, 1);
-    const width = Math.max(1, Math.round(image.naturalWidth * scale));
-    const height = Math.max(1, Math.round(image.naturalHeight * scale));
+    const scale = Math.min(availableWidth / source.width, availableHeight / source.height, 1);
+    const width = Math.max(1, Math.round(source.width * scale));
+    const height = Math.max(1, Math.round(source.height * scale));
     return { width, height, x: Math.round((canvas.width - width) / 2), y: Math.round((canvas.height - height) / 2) };
   };
   const getSamplingStep = (width, height, limit) => Math.max(2, Math.round(Math.sqrt((width * height) / limit)));
   window.getFramedSourceRect = function getFramedSourceRect(image, outputWidth, outputHeight) {
     const frame = state.framing;
-    const baseScale = Math.max(outputWidth / image.naturalWidth, outputHeight / image.naturalHeight);
+    const baseScale = Math.min(outputWidth / image.naturalWidth, outputHeight / image.naturalHeight);
     const scale = baseScale * frame.zoom;
     const width = Math.min(image.naturalWidth, outputWidth / scale);
     const height = Math.min(image.naturalHeight, outputHeight / scale);
@@ -34,10 +34,10 @@
   };
 
   window.createParticlesFromImage = function createParticlesFromImage(image, mode = state.particleMode) {
-    const bounds = getFittedBounds(image, window.fireworkCanvas);
+    const source = window.getFramedSourceRect(image, window.fireworkCanvas.width, window.fireworkCanvas.height);
+    const bounds = getFittedBounds(source, window.fireworkCanvas);
     const step = getSamplingStep(bounds.width, bounds.height, PARTICLE_PRESETS[mode]);
     samplingCanvas.width = bounds.width; samplingCanvas.height = bounds.height;
-    const source = window.getFramedSourceRect(image, bounds.width, bounds.height);
     samplingContext.clearRect(0, 0, bounds.width, bounds.height);
     samplingContext.drawImage(image, source.x, source.y, source.width, source.height, 0, 0, bounds.width, bounds.height);
     const pixels = samplingContext.getImageData(0, 0, bounds.width, bounds.height).data;

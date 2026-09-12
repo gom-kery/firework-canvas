@@ -7,6 +7,9 @@
 - Upload Image 패널을 파일 형식·용량 안내, Upload/Change와 Delete 버튼, 편집 미리보기 순서로 재구성했습니다.
 - 큰 초기 Upload 안내와 별도의 Change 버튼을 제거했습니다.
 - 이미지 상태에 따라 하나의 버튼이 Upload 또는 Change로 자동 전환됩니다.
+- 업로드 미리보기와 Convert Canvas가 동일한 Framing source 영역을 사용하도록 맞췄습니다.
+- 기본 확대값에서는 업로드 원본 전체를 비율 유지 상태로 표시합니다.
+- 업로드 후에도 Convert Canvas 안내 문구가 남아 있던 표시 문제를 수정했습니다.
 
 ### Unit 4.1A — Image Framing & Pacing
 
