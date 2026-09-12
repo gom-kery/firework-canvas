@@ -19,15 +19,6 @@
     const extension = file.name.split(".").pop().toLowerCase();
     return allowedTypes.has(file.type) || allowedExtensions.has(extension);
   }
-  function drawImageOnCanvas(image) {
-    const canvas = window.fireworkCanvas;
-    const context = window.fireworkContext;
-    const scale = Math.min(canvas.width / image.naturalWidth, canvas.height / image.naturalHeight);
-    const width = image.naturalWidth * scale;
-    const height = image.naturalHeight * scale;
-    window.drawCanvasBackground();
-    context.drawImage(image, (canvas.width - width) / 2, (canvas.height - height) / 2, width, height);
-  }
   function resetImageState() {
     if (state.imageObjectUrl) URL.revokeObjectURL(state.imageObjectUrl);
     state.image = null;
@@ -41,11 +32,13 @@
     state.previewReady = false;
   }
   function showUploadedImage(image, objectUrl) {
+    const particles = window.createParticlesFromImage(image);
     if (state.imageObjectUrl) URL.revokeObjectURL(state.imageObjectUrl);
     state.image = image;
     state.imageWidth = image.naturalWidth;
     state.imageHeight = image.naturalHeight;
     state.imageObjectUrl = objectUrl;
+    state.particles = particles;
     state.previewReady = true;
     preview.src = objectUrl;
     preview.hidden = false;
@@ -53,7 +46,7 @@
     canvasLabel.hidden = true;
     changeButton.disabled = false;
     deleteButton.disabled = false;
-    drawImageOnCanvas(image);
+    window.renderStaticParticles(state.particles);
   }
   function loadImage(file) {
     if (!isAllowedImage(file)) { showError("지원하지 않는 이미지 형식입니다."); return; }
